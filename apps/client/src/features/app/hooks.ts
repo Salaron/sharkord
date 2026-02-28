@@ -14,6 +14,7 @@ import {
   modViewOpenSelector,
   modViewUserIdSelector,
   selectedDmChannelIdSelector,
+  serverUrlSelector,
   threadSidebarDataSelector,
   voiceChatSidebarDataSelector
 } from './selectors';
@@ -57,3 +58,5 @@ export const useMessageJumpTarget = () =>
 
 export const useVoiceChatSidebar = () =>
   useSelector(voiceChatSidebarDataSelector);
+
+export const useServerUrl = () => useSelector(serverUrlSelector);

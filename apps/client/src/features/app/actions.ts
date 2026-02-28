@@ -1,15 +1,18 @@
 import { getFileUrl, getUrlFromServer } from '@/helpers/get-file-url';
 import {
   LocalStorageKey,
+  removeLocalStorageItem,
   setLocalStorageItem,
   setLocalStorageItemBool
 } from '@/helpers/storage';
+import { isDesktopApp } from '@/lib/desktop';
 import type { TMessageJumpToTarget } from '@/types';
 import type { TServerInfo } from '@sharkord/shared';
 import { toast } from 'sonner';
 import { setInfo } from '../server/actions';
 import { store } from '../store';
 import {
+  serverUrlSelector,
   voiceChatChannelIdSelector,
   voiceChatSidebarDataSelector
 } from './selectors';
@@ -60,9 +63,11 @@ const applyServerBranding = (info: TServerInfo) => {
   setOrCreateMeta('apple-mobile-web-app-title', info.name);
 };
 
-export const fetchServerInfo = async (): Promise<TServerInfo | undefined> => {
+export const fetchServerInfo = async (
+  serverUrl?: string
+): Promise<TServerInfo | undefined> => {
   try {
-    const url = getUrlFromServer();
+    const url = serverUrl ?? serverUrlSelector(store.getState());
     const response = await fetch(`${url}/info`);
 
     if (!response.ok) {
@@ -83,6 +88,9 @@ export const loadApp = async () => {
   if (!info) {
     console.error('Failed to load server info during app load');
     toast.error('Failed to load server info');
+    if (isDesktopApp()) {
+      setServerUrl(null);
+    }
     return;
   }
 
@@ -166,6 +174,16 @@ export const setBrowserNotificationsForMentions = (enabled: boolean) => {
     LocalStorageKey.BROWSER_NOTIFICATIONS_FOR_MENTIONS,
     enabled
   );
+};
+
+export const setServerUrl = (url: string | null) => {
+  store.dispatch(appSliceActions.setServerUrl(url));
+
+  if (url) {
+    setLocalStorageItem(LocalStorageKey.SERVER_URL, url);
+  } else {
+    removeLocalStorageItem(LocalStorageKey.SERVER_URL);
+  }
 };
 
 export const setBrowserNotificationsForDms = async (enabled: boolean) => {

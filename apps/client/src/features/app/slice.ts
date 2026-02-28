@@ -1,8 +1,10 @@
 import {
+  getLocalStorageItem,
   getLocalStorageItemAsNumber,
   getLocalStorageItemBool,
   LocalStorageKey
 } from '@/helpers/storage';
+import { isDesktopApp } from '@/lib/desktop';
 import type { TDevices, TMessageJumpToTarget } from '@/types';
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
@@ -25,6 +27,7 @@ export interface TAppState {
   messageJumpTarget: TMessageJumpToTarget | undefined;
   voiceChatSidebarOpen: boolean;
   voiceChatChannelId: number | undefined;
+  serverUrl: string | null;
 }
 
 const initialState: TAppState = {
@@ -62,7 +65,12 @@ const initialState: TAppState = {
   ),
   voiceChatChannelId: getLocalStorageItemAsNumber(
     LocalStorageKey.VOICE_CHAT_SIDEBAR_CHANNEL_ID
-  )
+  ),
+  serverUrl: isDesktopApp()
+    ? getLocalStorageItem(LocalStorageKey.SERVER_URL)
+    : import.meta.env.MODE === 'development'
+      ? 'http://localhost:4991'
+      : `${window.location.protocol}//${window.location.host}`
 };
 
 export const appSlice = createSlice({
@@ -142,6 +150,9 @@ export const appSlice = createSlice({
     ) => {
       state.voiceChatSidebarOpen = action.payload.open;
       state.voiceChatChannelId = action.payload.channelId;
+    },
+    setServerUrl: (state, action: PayloadAction<string | null>) => {
+      state.serverUrl = action.payload;
     }
   }
 });

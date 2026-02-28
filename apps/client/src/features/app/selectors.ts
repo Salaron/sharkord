@@ -68,3 +68,6 @@ export const threadSidebarDataSelector = createSelector(
     channelId
   })
 );
+
+export const serverUrlSelector = (state: IRootState) =>
+  state.app.serverUrl;

@@ -1,7 +1,8 @@
 import {
   useIsAppLoading,
   useIsAutoConnecting,
-  useIsPluginsLoading
+  useIsPluginsLoading,
+  useServerUrl
 } from '@/features/app/hooks';
 import {
   useDisconnectInfo,
@@ -11,6 +12,7 @@ import {
 import { Connect } from '@/screens/connect';
 import { Disconnected } from '@/screens/disconnected';
 import { LoadingApp } from '@/screens/loading-app';
+import { ServerConnect } from '@/screens/server-connect';
 import { ServerView } from '@/screens/server-view';
 import { DisconnectCode } from '@sharkord/shared';
 import { memo, useEffect } from 'react';
@@ -24,6 +26,7 @@ const Routing = memo(() => {
   const disconnectInfo = useDisconnectInfo();
   const serverName = useServerName();
   const isAutoConnecting = useIsAutoConnecting();
+  const serverUrl = useServerUrl();
 
   useEffect(() => {
     if (isConnected && serverName) {
@@ -33,6 +36,10 @@ const Routing = memo(() => {
 
     document.title = 'Sharkord';
   }, [isConnected, serverName]);
+
+  if (!serverUrl) {
+    return <ServerConnect />;
+  }
 
   if (isAppLoading || isPluginsLoading) {
     return (
