@@ -1,12 +1,18 @@
-import type { TMessageJumpToTarget } from '@/types';
-import { LocalStorageKey, removeLocalStorageItem, setLocalStorageItem, setLocalStorageItemBool } from '@/helpers/storage';
-import type { TServerInfo } from '@sharkord/shared';
+import {
+  LocalStorageKey,
+  removeLocalStorageItem,
+  setLocalStorageItem,
+  setLocalStorageItemAsJSON,
+  setLocalStorageItemBool
+} from '@/helpers/storage';
+import { isDesktopApp, registerShortcuts } from '@/lib/desktop';
+import type { TServerInfo, TShortcut } from '@sharkord/shared';
 import { toast } from 'sonner';
 import { setInfo } from '../server/actions';
 import { store } from '../store';
+import { serverUrlSelector, shortcutsSelector } from './selectors';
 import { appSliceActions } from './slice';
-import { serverUrlSelector } from './selectors';
-import { isDesktopApp } from '@/lib/desktop';
+import type { TMessageJumpToTarget } from '@/types';
 
 export const setAppLoading = (loading: boolean) =>
   store.dispatch(appSliceActions.setAppLoading(loading));
@@ -17,7 +23,9 @@ export const setIsAutoConnecting = (isAutoConnecting: boolean) =>
 export const setPluginsLoading = (loading: boolean) =>
   store.dispatch(appSliceActions.setLoadingPlugins(loading));
 
-export const fetchServerInfo = async (serverUrl?: string): Promise<TServerInfo | undefined> => {
+export const fetchServerInfo = async (
+  serverUrl?: string
+): Promise<TServerInfo | undefined> => {
   try {
     const url = serverUrl ?? serverUrlSelector(store.getState());
     const response = await fetch(`${url}/info`);
@@ -45,6 +53,9 @@ export const loadApp = async () => {
     }
     return;
   }
+
+  const shortcuts = shortcutsSelector(store.getState());
+  if (shortcuts) registerShortcuts(shortcuts);
 
   setInfo(info);
   setAppLoading(false);
@@ -151,6 +162,16 @@ export const setBrowserNotificationsForDms = async (enabled: boolean) => {
     LocalStorageKey.BROWSER_NOTIFICATIONS_FOR_DMS,
     enabled
   );
+}
+
+export const setShortcuts = (shortcuts: TShortcut[]) => {
+  store.dispatch(appSliceActions.setShortcuts(shortcuts));
+
+  setLocalStorageItemAsJSON(LocalStorageKey.SHORTCUTS, shortcuts);
+
+  if (isDesktopApp()) {
+    registerShortcuts(shortcuts);
+  }
 };
 
 export const setMessageJumpTarget = (

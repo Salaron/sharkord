@@ -1,9 +1,10 @@
-import { BrowserWindow, shell } from 'electron';
+import { app, BrowserWindow, shell } from 'electron';
 import path from 'path';
 
 const RENDERER_URL = process.env.ELECTRON_RENDERER_URL;
 
 let mainWindow: BrowserWindow | null = null;
+let quitting = false;
 
 const createMainWindow = () => {
   mainWindow = new BrowserWindow({
@@ -24,6 +25,14 @@ const createMainWindow = () => {
     mainWindow?.show();
   });
 
+  mainWindow.on('close', (ev) => {
+    if (quitting) return;
+
+    ev.preventDefault();
+    mainWindow?.hide();
+    return false;
+  });
+
   mainWindow.webContents.setWindowOpenHandler(({ url }) => {
     shell.openExternal(url);
     return { action: 'deny' };
@@ -38,4 +47,9 @@ const createMainWindow = () => {
   return mainWindow;
 };
 
-export { createMainWindow, mainWindow };
+const quit = () => {
+  quitting = true;
+  app.quit();
+};
+
+export { createMainWindow, mainWindow, quit };
