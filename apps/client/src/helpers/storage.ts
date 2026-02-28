@@ -33,6 +33,7 @@ export enum LocalStorageKey {
   HIDE_OWN_SCREEN_SHARE = 'sharkord-hide-own-screen-share',
   SERVER_URL = 'sharkord-server-url',
   SCREEN_SHARE_SYSTEM_AUDIO = 'sharkord-screen-share-system-audio',
+  SHORTCUTS = 'sharkord-shortcuts',
 }
 
 export enum SessionStorageKey {
