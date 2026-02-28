@@ -1,4 +1,4 @@
-import { app } from 'electron';
+import { app, globalShortcut } from 'electron/main';
 import { createMainWindow } from './main-window';
 import { setupScreenShareRequestHandler } from './screen-sharing';
 import { initTray } from './tray';
@@ -7,17 +7,12 @@ if (!app.requestSingleInstanceLock()) {
   app.quit();
 } else {
   app.commandLine.appendSwitch('disable-quic');
+  app.commandLine.appendSwitch('enable-features', 'GlobalShortcutsPortal');
 
   app.whenReady().then(() => {
     const mainWindow = createMainWindow();
     initTray(mainWindow);
     setupScreenShareRequestHandler();
-
-    mainWindow.on('close', (ev) => {
-      ev.preventDefault();
-      mainWindow.hide();
-      return false;
-    });
 
     app.on('second-instance', () => {
       if (mainWindow) {
@@ -32,5 +27,10 @@ if (!app.requestSingleInstanceLock()) {
     if (process.platform !== 'darwin') {
       app.quit();
     }
+  });
+
+  app.on('will-quit', () => {
+    console.log('Unregistering shortcuts...');
+    globalShortcut.unregisterAll();
   });
 }
