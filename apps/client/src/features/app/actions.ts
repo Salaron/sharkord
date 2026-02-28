@@ -3,17 +3,19 @@ import {
   LocalStorageKey,
   removeLocalStorageItem,
   setLocalStorageItem,
+  setLocalStorageItemAsJSON,
   setLocalStorageItemBool
 } from '@/helpers/storage';
-import { isDesktopApp } from '@/lib/desktop';
+import { isDesktopApp, registerShortcuts } from '@/lib/desktop';
 import type { TMessageJumpToTarget } from '@/types';
-import type { TServerInfo } from '@sharkord/shared';
+import type { TServerInfo, TShortcut } from '@sharkord/shared';
 import { toast } from 'sonner';
 import { setInfo } from '../server/actions';
 import { store } from '../store';
 import {
   pluginSlotDebugSelector,
   serverUrlSelector,
+  shortcutsSelector,
   voiceChatChannelIdSelector,
   voiceChatSidebarDataSelector
 } from './selectors';
@@ -94,6 +96,9 @@ export const loadApp = async () => {
     }
     return;
   }
+
+  const shortcuts = shortcutsSelector(store.getState());
+  if (shortcuts) registerShortcuts(shortcuts);
 
   setInfo(info);
   applyServerBranding(info);
@@ -198,6 +203,16 @@ export const setBrowserNotificationsForDms = async (enabled: boolean) => {
     LocalStorageKey.BROWSER_NOTIFICATIONS_FOR_DMS,
     enabled
   );
+};
+
+export const setShortcuts = (shortcuts: TShortcut[]) => {
+  store.dispatch(appSliceActions.setShortcuts(shortcuts));
+
+  setLocalStorageItemAsJSON(LocalStorageKey.SHORTCUTS, shortcuts);
+
+  if (isDesktopApp()) {
+    registerShortcuts(shortcuts);
+  }
 };
 
 export const setMessageJumpTarget = (

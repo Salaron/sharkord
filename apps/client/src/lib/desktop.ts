@@ -4,7 +4,7 @@ import {
   LocalStorageKey,
   setLocalStorageItemBool
 } from '@/helpers/storage';
-import { type TScreenShareSource } from '@sharkord/shared';
+import { type TScreenShareSource, type TShortcut } from '@sharkord/shared';
 
 if (typeof SharkordDesktop === 'undefined') {
   globalThis.SharkordDesktop = undefined;
@@ -13,6 +13,10 @@ if (typeof SharkordDesktop === 'undefined') {
 const isDesktopApp = (): boolean => {
   return !!SharkordDesktop;
 };
+
+const registerShortcuts = (shortcuts: TShortcut[]) => {
+  SharkordDesktop?.registerShortcuts(shortcuts);
+}
 
 SharkordDesktop?.showScreenSharePicker(
   async (sources: TScreenShareSource[]) => {
@@ -25,7 +29,7 @@ SharkordDesktop?.showScreenSharePicker(
       includeSystemAudio
     });
 
-    if (selection != null) {
+    if (selection) {
       setLocalStorageItemBool(
         LocalStorageKey.SCREEN_SHARE_SYSTEM_AUDIO,
         selection.includeSystemAudio
@@ -36,4 +40,4 @@ SharkordDesktop?.showScreenSharePicker(
   }
 );
 
-export { isDesktopApp };
+export { isDesktopApp, registerShortcuts };
