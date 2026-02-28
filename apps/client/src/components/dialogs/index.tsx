@@ -14,6 +14,7 @@ import { PluginSettingsDialog } from './plugin-settings';
 import { SearchDialog } from './search';
 import { ServerPasswordDialog } from './server-password';
 import { TextInputDialog } from './text-input';
+import { ScreenSharePickerDialog } from './screen-share';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const DialogsMap: any = {
@@ -28,7 +29,8 @@ const DialogsMap: any = {
   [Dialog.PLUGIN_COMMANDS]: PluginCommandsDialog,
   [Dialog.PLUGIN_SETTINGS]: PluginSettingsDialog,
   [Dialog.DELETE_USER]: DeleteUserDialog,
-  [Dialog.SEARCH]: SearchDialog
+  [Dialog.SEARCH]: SearchDialog,
+  [Dialog.SCREEN_SHARE_PICKER]: ScreenSharePickerDialog
 };
 
 const DialogsProvider = memo(() => {

@@ -1,4 +1,9 @@
-import { getLocalStorageItemBool, LocalStorageKey } from '@/helpers/storage';
+import {
+  getLocalStorageItem,
+  getLocalStorageItemBool,
+  LocalStorageKey
+} from '@/helpers/storage';
+import { isDesktopApp } from '@/lib/desktop';
 import type { TDevices, TMessageJumpToTarget } from '@/types';
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
@@ -19,6 +24,7 @@ export interface TAppState {
   browserNotificationsForMentions: boolean;
   browserNotificationsForDms: boolean;
   messageJumpTarget: TMessageJumpToTarget | undefined;
+  serverUrl: string | null;
 }
 
 const initialState: TAppState = {
@@ -49,7 +55,12 @@ const initialState: TAppState = {
     LocalStorageKey.BROWSER_NOTIFICATIONS_FOR_DMS,
     false
   ),
-  messageJumpTarget: undefined
+  messageJumpTarget: undefined,
+  serverUrl: isDesktopApp()
+    ? getLocalStorageItem(LocalStorageKey.SERVER_URL)
+    : import.meta.env.MODE === 'development'
+      ? 'http://localhost:4991'
+      : `${window.location.protocol}//${window.location.host}`
 };
 
 export const appSlice = createSlice({
@@ -119,6 +130,9 @@ export const appSlice = createSlice({
       action: PayloadAction<TMessageJumpToTarget | undefined>
     ) => {
       state.messageJumpTarget = action.payload;
+    },
+    setServerUrl: (state, action: PayloadAction<string | null>) => {
+      state.serverUrl = action.payload;
     }
   }
 });

@@ -1,6 +1,8 @@
 /// <reference types="vite/client" />
 /// <reference types="zzfx" />
 
+import type { TSharkordDesktop } from '@sharkord/shared';
+
 // Extend the Window interface for global functions
 declare global {
   interface Window {
@@ -17,6 +19,8 @@ declare global {
   }
 
   const VITE_APP_VERSION: string;
+
+  var SharkordDesktop: TSharkordDesktop | undefined;
 }
 
 // this provides type definitions for i18n setup

@@ -1,11 +1,12 @@
-import { getUrlFromServer } from '@/helpers/get-file-url';
-import { LocalStorageKey, setLocalStorageItemBool } from '@/helpers/storage';
 import type { TMessageJumpToTarget } from '@/types';
+import { LocalStorageKey, removeLocalStorageItem, setLocalStorageItem, setLocalStorageItemBool } from '@/helpers/storage';
 import type { TServerInfo } from '@sharkord/shared';
 import { toast } from 'sonner';
 import { setInfo } from '../server/actions';
 import { store } from '../store';
 import { appSliceActions } from './slice';
+import { serverUrlSelector } from './selectors';
+import { isDesktopApp } from '@/lib/desktop';
 
 export const setAppLoading = (loading: boolean) =>
   store.dispatch(appSliceActions.setAppLoading(loading));
@@ -16,9 +17,9 @@ export const setIsAutoConnecting = (isAutoConnecting: boolean) =>
 export const setPluginsLoading = (loading: boolean) =>
   store.dispatch(appSliceActions.setLoadingPlugins(loading));
 
-export const fetchServerInfo = async (): Promise<TServerInfo | undefined> => {
+export const fetchServerInfo = async (serverUrl?: string): Promise<TServerInfo | undefined> => {
   try {
-    const url = getUrlFromServer();
+    const url = serverUrl ?? serverUrlSelector(store.getState());
     const response = await fetch(`${url}/info`);
 
     if (!response.ok) {
@@ -39,6 +40,9 @@ export const loadApp = async () => {
   if (!info) {
     console.error('Failed to load server info during app load');
     toast.error('Failed to load server info');
+    if (isDesktopApp()) {
+      setServerUrl(null);
+    }
     return;
   }
 
@@ -121,6 +125,16 @@ export const setBrowserNotificationsForMentions = (enabled: boolean) => {
     LocalStorageKey.BROWSER_NOTIFICATIONS_FOR_MENTIONS,
     enabled
   );
+}
+
+export const setServerUrl = (url: string | null) => {
+  store.dispatch(appSliceActions.setServerUrl(url));
+
+  if (url) {
+    setLocalStorageItem(LocalStorageKey.SERVER_URL, url);
+  } else {
+    removeLocalStorageItem(LocalStorageKey.SERVER_URL);
+  }
 };
 
 export const setBrowserNotificationsForDms = async (enabled: boolean) => {

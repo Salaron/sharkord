@@ -14,6 +14,7 @@ import {
   modViewOpenSelector,
   modViewUserIdSelector,
   selectedDmChannelIdSelector,
+  serverUrlSelector,
   threadSidebarDataSelector
 } from './selectors';
 
@@ -53,3 +54,5 @@ export const useBrowserNotificationsForDms = () =>
 
 export const useMessageJumpTarget = () =>
   useSelector(messageJumpTargetSelector);
+
+export const useServerUrl = () => useSelector(serverUrlSelector);

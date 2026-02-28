@@ -1,0 +1,58 @@
+{
+  "name": "@sharkord/desktop",
+  "version": "0.0.11",
+  "private": true,
+  "main": "dist/main.js",
+  "scripts": {
+    "dev": "bun run build:client && conc \"bun run dev:client\" \"bun run dev:electron\" \"cross-env ELECTRON_RENDERER_URL=http://localhost:5173 electronmon . --watch\"",
+    "dev:client": "cd ../client && bun dev",
+    "dev:electron": "bun run build:electron --watch",
+    "build": "bun run build:client && bun run build:electron",
+    "build:client": "cd ../client && bun run build",
+    "build:electron": "bun scripts/build.mts",
+    "publish": "bun run build && electron-builder",
+    "format": "prettier --write \"**/*.ts*\" --config ./.prettierrc.json",
+    "format:check": "prettier --check \"**/*.ts*\" --config ./.prettierrc.json"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.36.0",
+    "@sharkord/shared": "workspace:*",
+    "@sharkord/client": "workspace:*",
+    "@types/node": "^24.5.2",
+    "concurrently": "^9.2.1",
+    "cross-env": "^10.1.0",
+    "electron": "^40.6.0",
+    "electron-builder": "^26.8.1",
+    "electronmon": "^2.0.4",
+    "esbuild": "^0.27.3",
+    "eslint": "^9.36.0",
+    "eslint-plugin-unused-imports": "^4.1.4",
+    "prettier": "^3.4.2",
+    "prettier-plugin-organize-imports": "^4.0.0",
+    "typescript": "~5.8.3",
+    "typescript-eslint": "^8.44.0"
+  },
+  "build": {
+    "appId": "com.sharkord.desktop",
+    "productName": "Sharkord",
+    "executableName": "sharkord",
+    "directories": {
+      "output": "build/out",
+      "buildResources": "assets"
+    },
+    "files": [
+      "assets/*",
+      "dist/**/*"
+    ],
+    "linux": {
+      "target": [
+        "AppImage"
+      ]
+    },
+    "win": {
+      "target": [
+        "zip"
+      ]
+    }
+  }
+}
