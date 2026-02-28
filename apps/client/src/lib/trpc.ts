@@ -24,8 +24,8 @@ window.addEventListener('beforeunload', () => {
   isNavigatingAway = true;
 });
 
-const initializeTRPC = (host: string) => {
-  const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+const initializeTRPC = (host: string, useWss: boolean) => {
+  const protocol = useWss ? 'wss' : 'ws';
 
   wsClient = createWSClient({
     url: `${protocol}://${host}`,
@@ -61,12 +61,12 @@ const initializeTRPC = (host: string) => {
   return trpc;
 };
 
-const connectToTRPC = (host: string) => {
+const connectToTRPC = (host: string, useWss: boolean) => {
   if (trpc && currentHost === host) {
     return trpc;
   }
 
-  return initializeTRPC(host);
+  return initializeTRPC(host, useWss);
 };
 
 const getTRPCClient = () => {

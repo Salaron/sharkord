@@ -1,5 +1,5 @@
 {
-  "name": "client",
+  "name": "@sharkord/client",
   "private": true,
   "version": "0.0.16",
   "type": "module",

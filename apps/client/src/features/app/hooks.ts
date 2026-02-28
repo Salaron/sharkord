@@ -14,6 +14,7 @@ import {
   modViewUserIdSelector,
   pluginSlotDebugSelector,
   selectedDmChannelIdSelector,
+  serverUrlSelector,
   threadSidebarDataSelector,
   voiceChatSidebarDataSelector
 } from './selectors';
@@ -57,3 +58,5 @@ export const useVoiceChatSidebar = () =>
   useSelector(voiceChatSidebarDataSelector);
 
 export const usePluginSlotDebug = () => useSelector(pluginSlotDebugSelector);
+
+export const useServerUrl = () => useSelector(serverUrlSelector);
