@@ -1,5 +1,6 @@
 import {
   getLocalStorageItem,
+  getLocalStorageItemAsJSON,
   getLocalStorageItemAsNumber,
   getLocalStorageItemBool,
   LocalStorageKey
@@ -7,6 +8,7 @@ import {
 import { isDesktopApp } from '@/lib/desktop';
 import type { TDevices, TMessageJumpToTarget } from '@/types';
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import type { TShortcut } from '@sharkord/shared';
 
 export interface TAppState {
   appLoading: boolean;
@@ -28,6 +30,7 @@ export interface TAppState {
   voiceChatChannelId: number | undefined;
   pluginSlotDebug: boolean;
   serverUrl: string | null;
+  shortcuts: TShortcut[] | undefined;
 }
 
 const initialState: TAppState = {
@@ -73,7 +76,11 @@ const initialState: TAppState = {
     ? getLocalStorageItem(LocalStorageKey.SERVER_URL)
     : import.meta.env.MODE === 'development'
       ? 'http://localhost:4991'
-      : `${window.location.protocol}//${window.location.host}`
+      : `${window.location.protocol}//${window.location.host}`,
+  shortcuts: getLocalStorageItemAsJSON<TShortcut[]>(
+    LocalStorageKey.SHORTCUTS,
+    []
+  )
 };
 
 export const appSlice = createSlice({
@@ -156,6 +163,9 @@ export const appSlice = createSlice({
     },
     setServerUrl: (state, action: PayloadAction<string | null>) => {
       state.serverUrl = action.payload;
+    },
+    setShortcuts: (state, action: PayloadAction<TShortcut[]>) => {
+      state.shortcuts = action.payload;
     }
   }
 });

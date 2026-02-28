@@ -1,5 +1,6 @@
-import { app, BrowserWindow, Menu, Tray } from 'electron';
+import { BrowserWindow, Menu, Tray } from 'electron';
 import path from 'path';
+import { quit } from './main-window';
 
 const initTray = (mainWindow: BrowserWindow) => {
   const trayMenu = Menu.buildFromTemplate([
@@ -12,7 +13,7 @@ const initTray = (mainWindow: BrowserWindow) => {
     {
       label: 'Quit',
       click() {
-        app.exit();
+        quit();
       }
     }
   ]);

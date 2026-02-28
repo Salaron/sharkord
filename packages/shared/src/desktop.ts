@@ -1,6 +1,9 @@
 export enum IpcChannels {
   SCREEN_SHARE_PICKER = 'sharkord:screen_share_picker',
-  SCREEN_SHARE_SELECTION = 'sharkord:screen_share_selection'
+  SCREEN_SHARE_SELECTION = 'sharkord:screen_share_selection',
+  REGISTER_SHORTCUTS = 'sharkord:register_shortcuts',
+  TOGGLE_MIC = 'sharkord:toggle_mic',
+  TOGGLE_SOUND = 'sharkord:toggle_sound',
 }
 
 export type TScreenShareSourceKind = 'screen' | 'window';
@@ -19,6 +22,25 @@ export type TScreenShareSelection = {
 };
 
 export type TSharkordDesktop = {
-  showScreenSharePicker: (cb: (soucres: TScreenShareSource[]) => Promise<void>) => void;
+  showScreenSharePicker: (
+    cb: (soucres: TScreenShareSource[]) => Promise<void>
+  ) => void;
   handleScreenShareSelection: (selection: TScreenShareSelection | null) => void;
+  toggleMic: (cb: () => void) => () => void;
+  toggleSound: (cb: () => void) => () => void;
+  registerShortcuts: (shortcuts: TShortcut[]) => void;
 };
+
+export type TShortcut = {
+  keybind: string;
+  action: ShortcutAction;
+};
+
+export enum ShortcutAction {
+  TOGGLE_MIC = 'toggle_mic',
+  TOGGLE_SOUND = 'toggle_sound',
+  MUTE = 'mute',
+  UNMUTE = 'unmute',
+  DEAFEAN = 'deafean',
+  UNDEAFEAN = 'undeafean'
+}
