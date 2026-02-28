@@ -1,6 +1,7 @@
 import { Dialog } from '@/components/dialogs/dialogs';
 import { logDebug } from '@/helpers/browser-logger';
-import { getHostFromServer } from '@/helpers/get-file-url';
+import { getUrlFromServer } from '@/helpers/get-file-url';
+import { isDesktopApp } from '@/lib/desktop';
 import { cleanup, connectToTRPC, getTRPCClient } from '@/lib/trpc';
 import type { TMessageJumpToTarget } from '@/types';
 import { type TPublicServerSettings, type TServerInfo } from '@sharkord/shared';
@@ -18,6 +19,7 @@ import { infoSelector } from './selectors';
 import { serverSliceActions } from './slice';
 import { initSubscriptions } from './subscriptions';
 import { type TDisconnectInfo } from './types';
+import { setServerUrl } from '../app/actions';
 
 let unsubscribeFromServer: (() => void) | null = null;
 
@@ -69,8 +71,11 @@ export const connect = async () => {
 
   const { serverId } = info;
 
-  const host = getHostFromServer();
-  const trpc = await connectToTRPC(host);
+  const serverUrl = getUrlFromServer()!;
+
+  const url = new URL(serverUrl);
+  const useWss = url.protocol === "https:";
+  const trpc = connectToTRPC(url.host, useWss);
 
   const { hasPassword, handshakeHash } = await trpc.others.handshake.query();
 
@@ -105,6 +110,9 @@ export const joinServer = async (handshakeHash: string, password?: string) => {
 export const disconnectFromServer = () => {
   cleanup();
   unsubscribeFromServer?.();
+  if (isDesktopApp()) {
+    setServerUrl(null);
+  }
 };
 
 export const jumpToMessage = (target: TMessageJumpToTarget) => {

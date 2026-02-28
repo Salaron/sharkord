@@ -1,4 +1,6 @@
-const RNNOISE_WORKLET_URL = '/rnnoise/rnnoise-bundle.js';
+import { isDesktopApp } from '@/lib/desktop';
+
+const RNNOISE_WORKLET_URL = './rnnoise/rnnoise-bundle.js';
 const RNNOISE_WORKLET_NAME = 'RnnoiseProcessor';
 const RNNOISE_SAMPLE_RATE = 48000;
 const RNNOISE_READY_TIMEOUT_MS = 10000;
@@ -17,23 +19,24 @@ let rnnoiseBlobUrlPromise: Promise<string> | null = null;
 
 const getRnnoiseBlobUrl = (): Promise<string> => {
   if (!rnnoiseBlobUrlPromise) {
-    rnnoiseBlobUrlPromise = caches
-      .open(RNNOISE_CACHE_NAME)
-      .then(async (cache) => {
-        let response = await cache.match(RNNOISE_WORKLET_URL);
+    rnnoiseBlobUrlPromise = (
+      isDesktopApp()
+        ? fetch(RNNOISE_WORKLET_URL).then((r) => r.blob())
+        : caches.open(RNNOISE_CACHE_NAME).then(async (cache) => {
+            let response = await cache.match(RNNOISE_WORKLET_URL);
 
-        if (!response) {
-          await cache.add(RNNOISE_WORKLET_URL);
-          response = await cache.match(RNNOISE_WORKLET_URL);
-        }
+            if (!response) {
+              await cache.add(RNNOISE_WORKLET_URL);
+              response = await cache.match(RNNOISE_WORKLET_URL);
+            }
 
-        if (!response) {
-          throw new Error('failed to cache RNNoise worklet');
-        }
+            if (!response) {
+              throw new Error('failed to cache RNNoise worklet');
+            }
 
-        return response.blob();
-      })
-      .then((blob) => URL.createObjectURL(blob));
+            return response.blob();
+          })
+    ).then((blob) => URL.createObjectURL(blob));
   }
 
   return rnnoiseBlobUrlPromise;
