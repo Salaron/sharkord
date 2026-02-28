@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils';
 import { StreamKind } from '@sharkord/shared';
 import { IconButton } from '@sharkord/ui';
 import { Monitor, ZoomIn, ZoomOut } from 'lucide-react';
-import { memo, useCallback, useMemo } from 'react';
+import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { CardControls } from './card-controls';
 import { CardGradient } from './card-gradient';
 import { useScreenShareZoom } from './hooks/use-screen-share-zoom';
@@ -16,14 +16,18 @@ import { useVideoStats } from './hooks/use-video-stats';
 import { useVoiceRefs } from './hooks/use-voice-refs';
 import { PinButton } from './pin-button';
 import { VolumeButton } from './volume-button';
+import { FullScreenButton } from './full-screen-button';
 
 type tScreenShareControlsProps = {
   isPinned: boolean;
   isZoomEnabled: boolean;
+  isFullScreen: boolean;
   handlePinToggle: () => void;
   handleToggleZoom: () => void;
+  handleToggleFullscreen: () => void;
   showPinControls: boolean;
   showAudioControl: boolean;
+  showFullScreenControl: boolean;
   volumeKey: TVolumeKey;
 };
 
@@ -31,11 +35,14 @@ const ScreenShareControls = memo(
   ({
     isPinned,
     isZoomEnabled,
+    isFullScreen,
     handlePinToggle,
     handleToggleZoom,
+    handleToggleFullscreen,
     showPinControls,
     showAudioControl,
-    volumeKey
+    showFullScreenControl,
+    volumeKey,
   }: tScreenShareControlsProps) => {
     return (
       <CardControls>
@@ -52,6 +59,9 @@ const ScreenShareControls = memo(
         {showPinControls && (
           <PinButton isPinned={isPinned} handlePinToggle={handlePinToggle} />
         )}
+        {showFullScreenControl && (
+          <FullScreenButton isFullScreen={isFullScreen} handleToggleFullScreen={handleToggleFullscreen} />
+        )}
       </CardControls>
     );
   }
@@ -64,6 +74,7 @@ type TScreenShareCardProps = {
   onUnpin: () => void;
   className?: string;
   showPinControls: boolean;
+  showFullScreenControl: boolean;
 };
 
 const ScreenShareCard = memo(
@@ -73,7 +84,8 @@ const ScreenShareCard = memo(
     onPin,
     onUnpin,
     className,
-    showPinControls = true
+    showPinControls = true,
+    showFullScreenControl = true
   }: TScreenShareCardProps) => {
     const user = useUserById(userId);
     const ownUserId = useOwnUserId();
@@ -124,6 +136,7 @@ const ScreenShareCard = memo(
       getCursor,
       resetZoom
     } = useScreenShareZoom();
+    const [isFullScreenEnabled, setIsFullscreen] = useState(false);
 
     const handlePinToggle = useCallback(() => {
       if (isPinned) {
@@ -133,6 +146,34 @@ const ScreenShareCard = memo(
         onPin?.();
       }
     }, [isPinned, onPin, onUnpin, resetZoom]);
+
+    const handleToggleFullscreen = useCallback(() => {
+      const container = containerRef.current;
+
+      if (!container) return;
+
+      if (document.fullscreenElement === container) {
+        document.exitFullscreen();
+      } else {
+        container.requestFullscreen();
+      }
+    }, [containerRef]);
+
+    useEffect(() => {
+      const handleFullscreenChange = () => {
+        setIsFullscreen(document.fullscreenElement === containerRef.current);
+      };
+
+      document.addEventListener('fullscreenchange', handleFullscreenChange);
+      handleFullscreenChange();
+
+      return () => {
+        document.removeEventListener(
+          'fullscreenchange',
+          handleFullscreenChange
+        );
+      };
+    }, [containerRef]);
 
     if (!user || !hasScreenShareStream) return null;
 
@@ -160,10 +201,13 @@ const ScreenShareCard = memo(
         <ScreenShareControls
           isPinned={isPinned}
           isZoomEnabled={isZoomEnabled}
+          isFullScreen={isFullScreenEnabled}
           handlePinToggle={handlePinToggle}
           handleToggleZoom={handleToggleZoom}
+          handleToggleFullscreen={handleToggleFullscreen}
           showPinControls={showPinControls}
           showAudioControl={!isOwnUser && hasScreenShareAudioStream}
+          showFullScreenControl={showFullScreenControl}
           volumeKey={volumeKey}
         />
 
@@ -177,6 +221,7 @@ const ScreenShareCard = memo(
             transform: `scale(${zoom}) translate(${position.x / zoom}px, ${position.y / zoom}px)`,
             transition: isDragging ? 'none' : 'transform 0.1s ease-out'
           }}
+          onDoubleClick={handleToggleFullscreen}
         />
 
         <audio
