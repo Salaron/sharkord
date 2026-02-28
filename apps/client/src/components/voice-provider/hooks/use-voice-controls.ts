@@ -3,9 +3,10 @@ import { playSound } from '@/features/server/sounds/actions';
 import { SoundType } from '@/features/server/types';
 import { updateOwnVoiceState } from '@/features/server/voice/actions';
 import { useOwnVoiceState } from '@/features/server/voice/hooks';
+import { isDesktopApp } from '@/lib/desktop';
 import { getTRPCClient } from '@/lib/trpc';
 import { getTrpcError } from '@sharkord/shared';
-import { useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 
 type TPendingMicRestoreState = {
@@ -280,6 +281,23 @@ const useVoiceControls = ({
     startScreenShareStream,
     stopScreenShareStream
   ]);
+
+  if (isDesktopApp()) {
+    useEffect(() => {
+      const unsubscribeMic = SharkordDesktop?.toggleMic(() => {
+        toggleMic();
+      });
+
+      const unsubscribeSound = SharkordDesktop?.toggleSound(() => {
+        toggleSound();
+      });
+
+      return () => {
+        unsubscribeMic?.();
+        unsubscribeSound?.();
+      }
+    }, [ownVoiceState.micMuted, ownVoiceState.soundMuted]);
+  }
 
   return {
     toggleMic,
