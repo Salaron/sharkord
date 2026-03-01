@@ -4,6 +4,7 @@ export enum IpcChannels {
   REGISTER_SHORTCUTS = 'sharkord:register_shortcuts',
   TOGGLE_MIC = 'sharkord:toggle_mic',
   TOGGLE_SOUND = 'sharkord:toggle_sound',
+  OPEN_DEBUG = 'sharkord:open_debug'
 }
 
 export type TScreenShareSourceKind = 'screen' | 'window';
@@ -29,6 +30,7 @@ export type TSharkordDesktop = {
   toggleMic: (cb: () => void) => () => void;
   toggleSound: (cb: () => void) => () => void;
   registerShortcuts: (shortcuts: TShortcut[]) => void;
+  openDebug: () => void;
 };
 
 export type TShortcut = {
