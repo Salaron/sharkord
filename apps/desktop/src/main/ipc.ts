@@ -4,7 +4,7 @@ import {
   type TScreenShareSource,
   type TShortcut
 } from '@sharkord/shared';
-import { ipcMain } from 'electron';
+import { BrowserWindow, ipcMain } from 'electron';
 import { registerShortcuts } from './global-shortcuts';
 import { mainWindow } from './main-window';
 
@@ -37,4 +37,12 @@ ipcMain.on(IpcChannels.REGISTER_SHORTCUTS, (_, shortcuts: TShortcut[]) => {
   registerShortcuts(shortcuts);
 });
 
-export { getScreenShareSelection, toggleSound, toggleMic };
+ipcMain.on(IpcChannels.OPEN_DEBUG, () => {
+  const gpu = new BrowserWindow();
+  gpu.loadURL('chrome://gpu');
+
+  const webrtc = new BrowserWindow();
+  webrtc.loadURL('chrome://webrtc-internals');
+});
+
+export { getScreenShareSelection, toggleMic, toggleSound };
