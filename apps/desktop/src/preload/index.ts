@@ -32,6 +32,9 @@ const SharkordDesktop: TSharkordDesktop = {
     return () => {
       ipcRenderer.removeListener(IpcChannels.TOGGLE_SOUND, cb);
     };
+  },
+  openDebug: () => {
+    ipcRenderer.send(IpcChannels.OPEN_DEBUG);
   }
 };
 
