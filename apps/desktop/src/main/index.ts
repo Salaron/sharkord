@@ -7,7 +7,11 @@ if (!app.requestSingleInstanceLock()) {
   app.quit();
 } else {
   app.commandLine.appendSwitch('disable-quic');
-  app.commandLine.appendSwitch('enable-features', 'GlobalShortcutsPortal');
+  app.commandLine.appendSwitch('ignore-gpu-blocklist');
+  app.commandLine.appendSwitch(
+    'enable-features',
+    'GlobalShortcutsPortal,AcceleratedVideoEncoder,AcceleratedVideoDecoder,AcceleratedVideoDecodeLinuxZeroCopyGL,VaapiVideoEncoder,VaapiVideoDecoder'
+  );
 
   app.whenReady().then(() => {
     const mainWindow = createMainWindow();
