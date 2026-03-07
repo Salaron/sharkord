@@ -10,6 +10,7 @@ import type { AppData, Producer, Router } from 'mediasoup/types';
 
 export { PluginSlot };
 export type {
+  CommandDefinition,
   TInvokerContext,
   TPluginComponentsMapBySlotId,
   TPluginSlotContext
