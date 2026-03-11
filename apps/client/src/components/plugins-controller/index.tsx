@@ -34,8 +34,7 @@ const PluginsController = memo(() => {
   }, []);
 
   useEffect(() => {
-    if (!serverUrl)
-      return;
+    if (!serverUrl) return;
 
     // we need to fetch plugins here before joining the server
     // because there might be slots that need to be rendered in the login screen
