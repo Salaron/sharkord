@@ -30,7 +30,7 @@ export enum LocalStorageKey {
   LANGUAGE = 'sharkord-language',
   SERVER_URL = 'sharkord-server-url',
   SCREEN_SHARE_SYSTEM_AUDIO = 'sharkord-screen-share-system-audio',
-  SHORTCUTS = 'sharkord-shortcuts',
+  SHORTCUTS = 'sharkord-shortcuts'
 }
 
 export enum SessionStorageKey {

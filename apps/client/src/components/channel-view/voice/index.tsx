@@ -78,6 +78,7 @@ const VoiceChannel = memo(({ channelId }: TChannelProps) => {
             }
             onUnpin={unpinCard}
             showPinControls
+            showFullScreenControl
           />
         );
       }
