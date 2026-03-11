@@ -3,20 +3,9 @@ name: Manual Release
 on:
   workflow_dispatch:
     inputs:
-      bump:
-        description: "Version bump"
-        required: true
-        type: choice
-        options:
-          - none
-          - patch
-          - minor
-          - major
-        default: "none"
-
-permissions:
-  contents: write
-  pull-requests: write
+      version:
+        required: false
+        type: string
 
 jobs:
   ci:
@@ -25,70 +14,71 @@ jobs:
   e2e:
     uses: ./.github/workflows/e2e.yml
 
-  build-and-publish:
+  publish-server:
     needs: [ci, e2e]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Build project artifacts
+        id: build
         uses: ./.github/actions/build-sharkord
         with:
-          bump: ${{ inputs.bump }}
-
-      - name: Get new version
-        id: get_version
-        run: echo "version=$(jq -r .version package.json)" >> "$GITHUB_OUTPUT"
-
-      - name: Identify user
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          version: ${{ inputs.version }}
 
       - name: Build and publish Docker image
         uses: ./.github/actions/docker-build-publish
         with:
-          docker_username: ${{ secrets.DOCKER_USERNAME }}
-          docker_password: ${{ secrets.DOCKER_PASSWORD }}
+          docker_registry: ghcr.io
+          docker_username: ${{ github.repository_owner }}
+          docker_password: ${{ secrets.GITHUB_TOKEN }}
+          images: ghcr.io/${{ github.repository }}
           tags: |
-            ${{ secrets.DOCKER_USERNAME }}/sharkord:latest
-            ${{ secrets.DOCKER_USERNAME }}/sharkord:v${{ steps.get_version.outputs.version }}
+            latest
+            ${{ steps.build.outputs.version }}
           labels: |
             org.opencontainers.image.title=Sharkord
             org.opencontainers.image.description=Sharkord Server
-            org.opencontainers.image.version=${{ steps.get_version.outputs.version }}
-            org.opencontainers.image.source=https://github.com/Sharkord/sharkord
+            org.opencontainers.image.version=${{ github.event.release.name }}
+            org.opencontainers.image.source=https://github.com/${{ github.repository_owner }}/sharkord
 
-      - name: Create GitHub release
+      - name: Upload Artifacts to GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v${{ steps.get_version.outputs.version }}
-          name: v${{ steps.get_version.outputs.version }}
+          tag_name: ${{ github.sha }}
+          name: v${{ steps.build.outputs.version }}
           draft: true
           files: |
-            apps/server/build/out/sharkord-linux-x64
-            apps/server/build/out/sharkord-linux-arm64
-            apps/server/build/out/sharkord-windows-x64.exe
-            apps/server/build/out/sharkord-macos-x64
-            apps/server/build/out/sharkord-macos-arm64
-            apps/server/build/out/release.json
-          body: |
-            ## Changes
-            (TODO)
+            apps/server/build/out/sharkord-*
 
-            ## Docker Image
-            ```bash
-            docker pull ${{ secrets.DOCKER_USERNAME }}/sharkord:v${{ steps.get_version.outputs.version }}
-            ```
-      - name: Commit version bump
-        if: ${{ inputs.bump != 'none' }}
-        run: |
-          git add .
-          git commit -m "chore: bump version to ${{ steps.get_version.outputs.version }}"
+  publish-desktop:
+    needs: [ci, e2e]
+    runs-on: ${{ matrix.os }}
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
 
-      - name: Create Git tag
-        run: git tag -a "v${{ steps.get_version.outputs.version }}" -m "Release v${{ steps.get_version.outputs.version }}"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
 
-      - name: Push commit and tag
-        run: git push --follow-tags
+      - name: Build desktop artifacts
+        id: build
+        uses: ./.github/actions/build-desktop
+        with:
+          version: ${{ inputs.version }}
+
+      - name: Upload Artifacts to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.sha }}
+          name: v${{ steps.build.outputs.version }}
+          draft: true
+          files: |
+            apps/desktop/build/out/*.exe
+            apps/desktop/build/out/*.blockmap
+            apps/desktop/build/out/*.AppImage
+            apps/desktop/build/out/latest*.yml

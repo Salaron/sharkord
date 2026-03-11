@@ -1,5 +1,5 @@
-name: Build Sharkord
-description: Install Bun dependencies and build server artifacts. Requires checkout before use.
+name: Build Sharkord Desktop
+description: Install Bun dependencies and build desktop artifacts. Requires checkout before use.
 
 inputs:
   bun_version:
@@ -8,7 +8,7 @@ inputs:
     default: 1.3.12
 
   version:
-    description: Sharkord version to set before build
+    description: Sharkord version
     required: false
 
 outputs:
@@ -44,5 +44,5 @@ runs:
 
     - name: Build app
       shell: bash
-      working-directory: apps/server
-      run: bun run build
+      working-directory: apps/desktop
+      run: bun run publish
