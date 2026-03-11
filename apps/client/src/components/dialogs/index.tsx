@@ -12,10 +12,10 @@ import { PluginCommandsDialog } from './plugin-commands';
 import { PluginInstallConfirmDialog } from './plugin-install-confirm';
 import { PluginLogsDialog } from './plugin-logs';
 import { PluginSettingsDialog } from './plugin-settings';
+import { ScreenSharePickerDialog } from './screen-share';
 import { SearchDialog } from './search';
 import { ServerPasswordDialog } from './server-password';
 import { TextInputDialog } from './text-input';
-import { ScreenSharePickerDialog } from './screen-share';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const DialogsMap: any = {

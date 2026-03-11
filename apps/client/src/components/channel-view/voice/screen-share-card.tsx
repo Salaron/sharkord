@@ -11,12 +11,12 @@ import { Monitor, ZoomIn, ZoomOut } from 'lucide-react';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { CardControls } from './card-controls';
 import { CardGradient } from './card-gradient';
+import { FullScreenButton } from './full-screen-button';
 import { useScreenShareZoom } from './hooks/use-screen-share-zoom';
 import { useVideoStats } from './hooks/use-video-stats';
 import { useVoiceRefs } from './hooks/use-voice-refs';
 import { PinButton } from './pin-button';
 import { VolumeButton } from './volume-button';
-import { FullScreenButton } from './full-screen-button';
 
 type tScreenShareControlsProps = {
   isPinned: boolean;
@@ -42,7 +42,7 @@ const ScreenShareControls = memo(
     showPinControls,
     showAudioControl,
     showFullScreenControl,
-    volumeKey,
+    volumeKey
   }: tScreenShareControlsProps) => {
     return (
       <CardControls>
@@ -60,7 +60,10 @@ const ScreenShareControls = memo(
           <PinButton isPinned={isPinned} handlePinToggle={handlePinToggle} />
         )}
         {showFullScreenControl && (
-          <FullScreenButton isFullScreen={isFullScreen} handleToggleFullScreen={handleToggleFullscreen} />
+          <FullScreenButton
+            isFullScreen={isFullScreen}
+            handleToggleFullScreen={handleToggleFullscreen}
+          />
         )}
       </CardControls>
     );
@@ -224,11 +227,7 @@ const ScreenShareCard = memo(
           onDoubleClick={handleToggleFullscreen}
         />
 
-        <audio
-          ref={screenShareAudioRef}
-          className="hidden"
-          playsInline
-        />
+        <audio ref={screenShareAudioRef} className="hidden" playsInline />
 
         <div className="absolute bottom-0 left-0 right-0 p-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
           <div className="flex items-center gap-2 min-w-0">

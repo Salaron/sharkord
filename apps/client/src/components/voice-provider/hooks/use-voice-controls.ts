@@ -207,22 +207,29 @@ const useVoiceControls = ({
     stopScreenShareStream
   ]);
 
-  if (isDesktopApp()) {
-    useEffect(() => {
-      const unsubscribeMic = SharkordDesktop?.toggleMic(() => {
-        toggleMic();
-      });
+  useEffect(() => {
+    if (!isDesktopApp()) {
+      return;
+    }
 
-      const unsubscribeSound = SharkordDesktop?.toggleSound(() => {
-        toggleSound();
-      });
+    const unsubscribeMic = SharkordDesktop?.toggleMic(() => {
+      toggleMic();
+    });
 
-      return () => {
-        unsubscribeMic?.();
-        unsubscribeSound?.();
-      }
-    }, [ownVoiceState.micMuted, ownVoiceState.soundMuted]);
-  }
+    const unsubscribeSound = SharkordDesktop?.toggleSound(() => {
+      toggleSound();
+    });
+
+    return () => {
+      unsubscribeMic?.();
+      unsubscribeSound?.();
+    };
+  }, [
+    ownVoiceState.micMuted,
+    ownVoiceState.soundMuted,
+    toggleMic,
+    toggleSound
+  ]);
 
   return {
     toggleMic,

@@ -12,11 +12,7 @@ const VoiceUserAudioStream = memo(({ userId }: TVoiceUserAudioStreamProps) => {
   return (
     <>
       {hasAudioStream && (
-        <audio
-          ref={audioRef}
-          className="hidden"
-          data-user-id={userId}
-        />
+        <audio ref={audioRef} className="hidden" data-user-id={userId} />
       )}
     </>
   );
