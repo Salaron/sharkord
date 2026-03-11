@@ -9,7 +9,8 @@ import { toast } from 'sonner';
 import {
   setDmsOpen,
   setMessageJumpTarget,
-  setSelectedDmChannelId
+  setSelectedDmChannelId,
+  setServerUrl
 } from '../app/actions';
 import { openDialog } from '../dialogs/actions';
 import { store } from '../store';
@@ -23,7 +24,6 @@ import { infoSelector } from './selectors';
 import { serverSliceActions } from './slice';
 import { initSubscriptions } from './subscriptions';
 import { type TDisconnectInfo } from './types';
-import { setServerUrl } from '../app/actions';
 
 let unsubscribeFromServer: (() => void) | null = null;
 
@@ -70,7 +70,7 @@ export const connect = async () => {
   const serverUrl = getUrlFromServer()!;
 
   const url = new URL(serverUrl);
-  const useWss = url.protocol === "https:";
+  const useWss = url.protocol === 'https:';
   const trpc = connectToTRPC(url.host, useWss);
 
   const { hasPassword, handshakeHash } = await trpc.others.handshake.query();

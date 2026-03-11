@@ -1,5 +1,6 @@
 export const A = 123;
 
+export * from './desktop';
 export * from './events';
 export * from './extensions';
 export * from './helpers/index';
@@ -11,5 +12,3 @@ export * from './test-ids';
 export * from './trpc';
 export * from './types';
 export * from './voice';
-export * from './desktop';
-

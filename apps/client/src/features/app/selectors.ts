@@ -60,5 +60,4 @@ export const threadSidebarDataSelector = createSelector(
 
 export const serverUrlSelector = (state: IRootState) => state.app.serverUrl;
 
-export const shortcutsSelector = (state: IRootState) =>
-  state.app.shortcuts;
+export const shortcutsSelector = (state: IRootState) => state.app.shortcuts;

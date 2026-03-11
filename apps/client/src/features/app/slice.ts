@@ -67,7 +67,7 @@ const initialState: TAppState = {
   shortcuts: getLocalStorageItemAsJSON<TShortcut[]>(
     LocalStorageKey.SHORTCUTS,
     []
-  ),
+  )
 };
 
 export const appSlice = createSlice({

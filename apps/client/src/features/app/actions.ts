@@ -6,13 +6,13 @@ import {
   setLocalStorageItemBool
 } from '@/helpers/storage';
 import { isDesktopApp, registerShortcuts } from '@/lib/desktop';
+import type { TMessageJumpToTarget } from '@/types';
 import type { TServerInfo, TShortcut } from '@sharkord/shared';
 import { toast } from 'sonner';
 import { setInfo } from '../server/actions';
 import { store } from '../store';
 import { serverUrlSelector, shortcutsSelector } from './selectors';
 import { appSliceActions } from './slice';
-import type { TMessageJumpToTarget } from '@/types';
 
 export const setAppLoading = (loading: boolean) =>
   store.dispatch(appSliceActions.setAppLoading(loading));
@@ -136,7 +136,7 @@ export const setBrowserNotificationsForMentions = (enabled: boolean) => {
     LocalStorageKey.BROWSER_NOTIFICATIONS_FOR_MENTIONS,
     enabled
   );
-}
+};
 
 export const setServerUrl = (url: string | null) => {
   store.dispatch(appSliceActions.setServerUrl(url));
@@ -162,7 +162,7 @@ export const setBrowserNotificationsForDms = async (enabled: boolean) => {
     LocalStorageKey.BROWSER_NOTIFICATIONS_FOR_DMS,
     enabled
   );
-}
+};
 
 export const setShortcuts = (shortcuts: TShortcut[]) => {
   store.dispatch(appSliceActions.setShortcuts(shortcuts));

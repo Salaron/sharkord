@@ -1,6 +1,9 @@
 import { Dialog } from '@/components/dialogs/dialogs';
-import type { TScreenShareSelection, TScreenShareSource } from "@sharkord/shared";
-import type { TGenericObject } from '@sharkord/shared';
+import type {
+  TGenericObject,
+  TScreenShareSelection,
+  TScreenShareSource
+} from '@sharkord/shared';
 import { store } from '../store';
 import { dialogSliceActions } from './slice';
 
