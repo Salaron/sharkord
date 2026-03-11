@@ -1,22 +1,8 @@
 name: Manual Release
 
 on:
-  workflow_dispatch:
-    inputs:
-      bump:
-        description: "Version bump"
-        required: true
-        type: choice
-        options:
-          - none
-          - patch
-          - minor
-          - major
-        default: "none"
-
-permissions:
-  contents: write
-  pull-requests: write
+  release:
+    types: [published]
 
 jobs:
   ci:
@@ -25,7 +11,7 @@ jobs:
   e2e:
     uses: ./.github/workflows/e2e.yml
 
-  build-and-publish:
+  publish-server:
     needs: [ci, e2e]
     runs-on: ubuntu-latest
     steps:
@@ -34,61 +20,53 @@ jobs:
 
       - name: Build project artifacts
         uses: ./.github/actions/build-sharkord
-        with:
-          bump: ${{ inputs.bump }}
-
-      - name: Get new version
-        id: get_version
-        run: echo "version=$(jq -r .version package.json)" >> "$GITHUB_OUTPUT"
-
-      - name: Identify user
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Build and publish Docker image
         uses: ./.github/actions/docker-build-publish
         with:
-          docker_username: ${{ secrets.DOCKER_USERNAME }}
-          docker_password: ${{ secrets.DOCKER_PASSWORD }}
+          docker_registry: ghcr.io
+          docker_username: ${{ github.repository_owner }}
+          docker_password: ${{ secrets.GITHUB_TOKEN }}
+          images: ghcr.io/${{ github.repository }}
           tags: |
-            ${{ secrets.DOCKER_USERNAME }}/sharkord:latest
-            ${{ secrets.DOCKER_USERNAME }}/sharkord:v${{ steps.get_version.outputs.version }}
+            latest
+            ${{ github.event.release.name }}
           labels: |
             org.opencontainers.image.title=Sharkord
             org.opencontainers.image.description=Sharkord Server
-            org.opencontainers.image.version=${{ steps.get_version.outputs.version }}
-            org.opencontainers.image.source=https://github.com/Sharkord/sharkord
+            org.opencontainers.image.version=${{ github.event.release.name }}
+            org.opencontainers.image.source=https://github.com/${{ github.repository_owner }}/sharkord
 
-      - name: Create GitHub release
-        uses: softprops/action-gh-release@v2
+      - name: Upload Artifacts to GitHub Release
+        uses: ncipollo/release-action@v1
         with:
-          tag_name: v${{ steps.get_version.outputs.version }}
-          name: v${{ steps.get_version.outputs.version }}
-          draft: true
-          files: |
-            apps/server/build/out/sharkord-linux-x64
-            apps/server/build/out/sharkord-linux-arm64
-            apps/server/build/out/sharkord-windows-x64.exe
-            apps/server/build/out/sharkord-macos-x64
-            apps/server/build/out/sharkord-macos-arm64
-            apps/server/build/out/release.json
-          body: |
-            ## Changes
-            (TODO)
+          artifacts: apps/server/build/out/sharkord-*
+          allowUpdates: true
+          omitBodyDuringUpdate: true
+          omitDraftDuringUpdate: true
+          omitNameDuringUpdate: true
+          omitPrereleaseDuringUpdate: true
 
-            ## Docker Image
-            ```bash
-            docker pull ${{ secrets.DOCKER_USERNAME }}/sharkord:v${{ steps.get_version.outputs.version }}
-            ```
-      - name: Commit version bump
-        if: ${{ inputs.bump != 'none' }}
-        run: |
-          git add .
-          git commit -m "chore: bump version to ${{ steps.get_version.outputs.version }}"
+  publish-desktop:
+    needs: [ci, e2e]
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
 
-      - name: Create Git tag
-        run: git tag -a "v${{ steps.get_version.outputs.version }}" -m "Release v${{ steps.get_version.outputs.version }}"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Push commit and tag
-        run: git push --follow-tags
+      - name: Build desktop artifacts
+        uses: ./.github/actions/build-desktop
+
+      - name: Upload Artifacts to GitHub Release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: apps/desktop/build/out/Sharkord-*.AppImage,apps/desktop/build/out/Sharkord-*.zip
+          allowUpdates: true
+          omitBodyDuringUpdate: true
+          omitDraftDuringUpdate: true
+          omitNameDuringUpdate: true
+          omitPrereleaseDuringUpdate: true
