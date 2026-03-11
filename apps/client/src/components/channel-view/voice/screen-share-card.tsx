@@ -208,11 +208,7 @@ const ScreenShareCard = memo(
           }}
         />
 
-        <audio
-          ref={screenShareAudioRef}
-          className="hidden"
-          playsInline
-        />
+        <audio ref={screenShareAudioRef} className="hidden" playsInline />
 
         <div className="absolute bottom-0 left-0 right-0 p-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
           <div className="flex items-center gap-2 min-w-0">
