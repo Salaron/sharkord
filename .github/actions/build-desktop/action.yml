@@ -1,0 +1,55 @@
+name: Build Sharkord Desktop
+description: Install Bun dependencies and build desktop artifacts. Requires checkout before use.
+
+inputs:
+  bun_version:
+    description: Bun version to install
+    required: false
+    default: 1.4.4
+
+  version:
+    description: Sharkord version
+    required: false
+
+outputs:
+  version:
+    description: 'Current Sharkord version'
+    value: ${{ steps.version.outputs.version }}
+
+runs:
+  using: composite
+  steps:
+    - name: Install Bun
+      uses: oven-sh/setup-bun@v2
+      with:
+        bun-version: ${{ inputs.bun_version }}
+
+    - name: Mediasoup worker
+      if: runner.os == 'Linux'
+      uses: ./.github/actions/mediasoup-worker
+
+    - name: Install dependencies
+      shell: bash
+      run: bun install --frozen-lockfile
+
+    - name: Set version
+      if: ${{ inputs.version != '' }}
+      shell: bash
+      working-directory: apps/server
+      run: bun run ./build/set-version.ts --version "${{ inputs.version }}"
+    
+    - name: Get version
+      id: version
+      shell: bash
+      working-directory: apps/server
+      run: |
+        VERSION=$(jq -r .version package.json)
+        echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+
+    - name: Build
+      shell: bash
+      working-directory: apps/desktop
+      env:
+        # unsigned until signing certificates are set up
+        CSC_IDENTITY_AUTO_DISCOVERY: false
+      run: bun run package --publish never
