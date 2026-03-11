@@ -11,20 +11,10 @@ const Keybind = memo(({ keybind, onKeybindChange }: TKeybindProps) => {
   const [isCapturingKeybind, setCapturingKeybind] = useState(false);
   const [currentKeybind, setCurrentKeybind] = useState(keybind);
 
-  const modifiers = [
-    'Control',
-    'Command',
-    'Meta',
-    'Alt',
-    'Shift',
-    'Super',
-    'Option'
-  ];
-
   const resetKeybind = useCallback(() => {
     setCurrentKeybind(undefined);
     onKeybindChange(undefined);
-  }, [currentKeybind]);
+  }, [setCurrentKeybind, onKeybindChange]);
 
   const formatKeybind = useCallback(() => {
     if (!currentKeybind) return 'Not set';
@@ -33,6 +23,16 @@ const Keybind = memo(({ keybind, onKeybindChange }: TKeybindProps) => {
   }, [currentKeybind]);
 
   useEffect(() => {
+    const modifiers = [
+      'Control',
+      'Command',
+      'Meta',
+      'Alt',
+      'Shift',
+      'Super',
+      'Option'
+    ];
+
     if (!isCapturingKeybind) return;
 
     const onKeyDown = (event: KeyboardEvent) => {
@@ -73,7 +73,7 @@ const Keybind = memo(({ keybind, onKeybindChange }: TKeybindProps) => {
     return () => {
       window.removeEventListener('keydown', onKeyDown, true);
     };
-  }, [isCapturingKeybind]);
+  }, [isCapturingKeybind, onKeybindChange]);
 
   return (
     <div className="flex items-center gap-2">

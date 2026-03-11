@@ -12,7 +12,8 @@
     "build:electron": "bun scripts/build.mts",
     "publish": "bun run build && electron-builder -p onTag",
     "format": "prettier --write \"**/*.ts*\" --config ./.prettierrc.json",
-    "format:check": "prettier --check \"**/*.ts*\" --config ./.prettierrc.json"
+    "format:check": "prettier --check \"**/*.ts*\" --config ./.prettierrc.json",
+    "check-types": "tsc --noEmit"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
