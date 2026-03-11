@@ -16,7 +16,7 @@ const isDesktopApp = (): boolean => {
 
 const registerShortcuts = (shortcuts: TShortcut[]) => {
   SharkordDesktop?.registerShortcuts(shortcuts);
-}
+};
 
 SharkordDesktop?.showScreenSharePicker(
   async (sources: TScreenShareSource[]) => {
