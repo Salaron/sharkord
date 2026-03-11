@@ -19,7 +19,7 @@ const isDesktopApp = (): boolean => {
 
 const registerShortcuts = (shortcuts: TShortcut[]) => {
   SharkordDesktop?.registerShortcuts(shortcuts);
-}
+};
 
 const checkUpdates = () => {
   SharkordDesktop?.checkUpdates();
