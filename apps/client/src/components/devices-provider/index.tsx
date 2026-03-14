@@ -28,8 +28,8 @@ const getDefaultDeviceSettings = (): TDeviceSettings => ({
   webcamId: undefined,
   webcamResolution: Resolution['720p'],
   webcamFramerate: 30,
-  echoCancellation: false,
-  noiseSuppression: NoiseSuppression.NONE,
+  echoCancellation: true,
+  noiseSuppression: NoiseSuppression.RNNOISE,
   autoGainControl: true,
   noiseGateEnabled: false,
   noiseGateThresholdDb: MICROPHONE_GATE_DEFAULT_THRESHOLD_DB,
@@ -37,8 +37,8 @@ const getDefaultDeviceSettings = (): TDeviceSettings => ({
   restrictOwnAudio: getRestrictOwnAudioSupport(),
   suppressLocalAudioPlayback: false,
   mirrorOwnVideo: false,
-  screenResolution: Resolution['720p'],
-  screenFramerate: 30,
+  screenResolution: Resolution['1080p'],
+  screenFramerate: 60,
   screenCodec: VideoCodec.AUTO,
   screenBitrate: DEFAULT_BITRATE
 });
