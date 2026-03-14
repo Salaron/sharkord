@@ -43,6 +43,14 @@ const VoiceUser = memo(({ user, isOwnChannel = false }: TVoiceUserProps) => {
       </span>
 
       <div className="flex items-center gap-1 opacity-60">
+        {user.state.webcamEnabled && (
+          <Video className="h-3 w-3 text-blue-500" />
+        )}
+
+        {user.state.sharingScreen && (
+          <Monitor className="h-3 w-3 text-purple-500" />
+        )}
+
         {shouldShowMuteIndicator && (
           <VolumeX className="h-3 w-3 text-red-500" />
         )}
@@ -62,14 +70,6 @@ const VoiceUser = memo(({ user, isOwnChannel = false }: TVoiceUserProps) => {
             <Headphones className="h-3 w-3 text-green-500" />
           )}
         </div>
-
-        {user.state.webcamEnabled && (
-          <Video className="h-3 w-3 text-blue-500" />
-        )}
-
-        {user.state.sharingScreen && (
-          <Monitor className="h-3 w-3 text-purple-500" />
-        )}
       </div>
     </div>
   );
