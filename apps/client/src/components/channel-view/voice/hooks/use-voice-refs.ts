@@ -85,7 +85,7 @@ const useVoiceRefs = (
     return external?.videoStream;
   }, [externalStreams, remoteId, isOwnUser]);
 
-  const { audioLevel, isSpeaking, speakingIntensity, speakingEffectClass } =
+  const { audioLevel, isSpeaking, speakingIntensity } =
     useAudioLevel(audioStreamForLevel);
 
   const userVolumeKey = getUserVolumeKey(remoteId);
@@ -215,8 +215,7 @@ const useVoiceRefs = (
     hasExternalVideoStream: !!externalVideoStream,
     audioLevel,
     isSpeaking,
-    speakingIntensity,
-    speakingEffectClass
+    speakingIntensity
   };
 };
 

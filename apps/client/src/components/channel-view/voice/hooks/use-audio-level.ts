@@ -17,13 +17,6 @@ const ANALYZER_MAX_DECIBELS = -10;
 const ANALYZER_SMOOTHING_TIME_CONSTANT = 0.85;
 const SPEAKING_THRESHOLD = 8;
 
-const SPEAKING_EFFECT_CLASSES: Record<SpeakingIntensity, string> = {
-  [SpeakingIntensity.Silent]: '',
-  [SpeakingIntensity.Quiet]: 'speaking-effect-low',
-  [SpeakingIntensity.Normal]: 'speaking-effect-medium',
-  [SpeakingIntensity.Loud]: 'speaking-effect-high'
-};
-
 const useAudioLevel = (audioStream: MediaStream | undefined) => {
   const [audioLevel, setAudioLevel] = useState(0);
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -109,13 +102,10 @@ const useAudioLevel = (audioStream: MediaStream | undefined) => {
         : SpeakingIntensity.Loud
     : SpeakingIntensity.Silent;
 
-  const speakingEffectClass = SPEAKING_EFFECT_CLASSES[speakingIntensity] ?? '';
-
   return {
     audioLevel,
     isSpeaking,
-    speakingIntensity,
-    speakingEffectClass
+    speakingIntensity
   };
 };
 

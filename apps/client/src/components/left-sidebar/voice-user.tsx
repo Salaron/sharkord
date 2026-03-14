@@ -2,8 +2,6 @@ import { UserAvatar } from '@/components/user-avatar';
 import { useStreamVolumeControl } from '@/components/voice-provider/hooks/use-stream-volume-control';
 import type { TVoiceUser } from '@/features/server/types';
 import { useIsOwnUser } from '@/features/server/users/hooks';
-import { useSpeakingState } from '@/features/server/voice/hooks';
-import { cn } from '@sharkord/ui';
 import {
   HeadphoneOff,
   Headphones,
@@ -26,14 +24,13 @@ type TVoiceUserProps = {
 const VoiceUser = memo(({ user, isOwnChannel = false }: TVoiceUserProps) => {
   const isOwnUser = useIsOwnUser(user.id);
   const { isMuted } = useStreamVolumeControl({ type: 'user', userId: user.id });
-  const { isActivelySpeaking, speakingEffectClass } = useSpeakingState(user.id);
   const shouldShowMuteIndicator = isOwnChannel && !isOwnUser && isMuted;
 
   const userRow = (
     <div className="flex items-center gap-2 px-2 py-1 rounded hover:bg-accent/30 text-sm">
       <UserAvatar
         userId={user.id}
-        className={cn('h-5 w-5', isActivelySpeaking && speakingEffectClass)}
+        className="h-5 w-5"
         showUserPopover={true}
         showStatusBadge={false}
       />
