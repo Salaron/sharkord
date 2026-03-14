@@ -3,9 +3,10 @@ import { cn } from '@/lib/utils';
 import type { TExternalStream } from '@sharkord/shared';
 import { Avatar, AvatarFallback, AvatarImage, IconButton } from '@sharkord/ui';
 import { Headphones, Router, Video, ZoomIn, ZoomOut } from 'lucide-react';
-import { memo, useCallback } from 'react';
+import { memo, useCallback, useEffect, useState } from 'react';
 import { CardControls } from './card-controls';
 import { CardGradient } from './card-gradient';
+import { FullScreenButton } from './full-screen-button';
 import { useScreenShareZoom } from './hooks/use-screen-share-zoom';
 import { useVoiceRefs } from './hooks/use-voice-refs';
 import { PinButton } from './pin-button';
@@ -14,9 +15,12 @@ import { StreamSettingsPopover } from './stream-settings-popover';
 type TExternalStreamControlsProps = {
   isPinned: boolean;
   isZoomEnabled: boolean;
+  isFullScreen: boolean;
   handlePinToggle: () => void;
   handleToggleZoom: () => void;
+  handleToggleFullscreen: () => void;
   showPinControls: boolean;
+  showFullScreenControl: boolean;
   hasVideo: boolean;
   hasAudio: boolean;
   volume: number;
@@ -29,9 +33,12 @@ const ExternalStreamControls = memo(
   ({
     isPinned,
     isZoomEnabled,
+    isFullScreen,
     handlePinToggle,
     handleToggleZoom,
+    handleToggleFullscreen,
     showPinControls,
+    showFullScreenControl,
     hasVideo,
     hasAudio,
     volume,
@@ -61,6 +68,12 @@ const ExternalStreamControls = memo(
         {showPinControls && (
           <PinButton isPinned={isPinned} handlePinToggle={handlePinToggle} />
         )}
+        {showFullScreenControl && (
+          <FullScreenButton
+            isFullScreen={isFullScreen}
+            handleToggleFullScreen={handleToggleFullscreen}
+          />
+        )}
       </CardControls>
     );
   }
@@ -74,6 +87,7 @@ type TExternalStreamCardProps = {
   onUnpin: () => void;
   className?: string;
   showPinControls: boolean;
+  showFullScreenControl: boolean;
 };
 
 const ExternalStreamCard = memo(
@@ -84,10 +98,13 @@ const ExternalStreamCard = memo(
     onPin,
     onUnpin,
     className,
-    showPinControls = true
+    showPinControls = true,
+    showFullScreenControl = true
   }: TExternalStreamCardProps) => {
     const { externalVideoRef, hasExternalVideoStream, hasExternalAudioStream } =
       useVoiceRefs(streamId, stream.pluginId, stream.key);
+
+    const [isFullScreenEnabled, setIsFullscreen] = useState(false);
 
     const { getVolume, setVolume, toggleMute, getExternalVolumeKey } =
       useVolumeControl();
@@ -119,6 +136,34 @@ const ExternalStreamCard = memo(
         onPin?.();
       }
     }, [isPinned, onPin, onUnpin, resetZoom]);
+
+    const handleToggleFullscreen = useCallback(() => {
+      const container = containerRef.current;
+
+      if (!container) return;
+
+      if (document.fullscreenElement === container) {
+        document.exitFullscreen();
+      } else {
+        container.requestFullscreen();
+      }
+    }, [containerRef]);
+
+    useEffect(() => {
+      const handleFullscreenChange = () => {
+        setIsFullscreen(document.fullscreenElement === containerRef.current);
+      };
+
+      document.addEventListener('fullscreenchange', handleFullscreenChange);
+      handleFullscreenChange();
+
+      return () => {
+        document.removeEventListener(
+          'fullscreenchange',
+          handleFullscreenChange
+        );
+      };
+    }, [containerRef]);
 
     const handleVolumeChange = useCallback(
       (newVolume: number) => {
@@ -158,8 +203,10 @@ const ExternalStreamCard = memo(
         <ExternalStreamControls
           isPinned={isPinned}
           isZoomEnabled={isZoomEnabled}
+          isFullScreen={isFullScreenEnabled}
           handlePinToggle={handlePinToggle}
           handleToggleZoom={handleToggleZoom}
+          handleToggleFullscreen={handleToggleFullscreen}
           showPinControls={showPinControls}
           hasVideo={!!hasVideo}
           hasAudio={!!hasAudio}
@@ -167,6 +214,7 @@ const ExternalStreamCard = memo(
           isMuted={isMuted}
           onVolumeChange={handleVolumeChange}
           onMuteToggle={handleMuteToggle}
+          showFullScreenControl={showFullScreenControl}
         />
 
         {hasVideo ? (
@@ -180,6 +228,7 @@ const ExternalStreamCard = memo(
               transform: `scale(${zoom}) translate(${position.x / zoom}px, ${position.y / zoom}px)`,
               transition: isDragging ? 'none' : 'transform 0.1s ease-out'
             }}
+            onDoubleClick={handleToggleFullscreen}
           />
         ) : (
           <div className="flex flex-col items-center justify-center gap-4 p-8">
