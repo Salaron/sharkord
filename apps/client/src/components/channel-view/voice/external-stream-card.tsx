@@ -1,13 +1,15 @@
 import { useVolumeControl } from '@/components/voice-provider/volume-control-context';
+import { useVoice } from '@/features/server/voice/hooks';
 import { cn } from '@/lib/utils';
-import type { TExternalStream } from '@sharkord/shared';
+import { StreamKind, type TExternalStream } from '@sharkord/shared';
 import { Avatar, AvatarFallback, AvatarImage, IconButton } from '@sharkord/ui';
 import { Headphones, Router, Video, ZoomIn, ZoomOut } from 'lucide-react';
-import { memo, useCallback, useEffect, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { CardControls } from './card-controls';
 import { CardGradient } from './card-gradient';
 import { FullScreenButton } from './full-screen-button';
 import { useScreenShareZoom } from './hooks/use-screen-share-zoom';
+import { useVideoStats } from './hooks/use-video-stats';
 import { useVoiceRefs } from './hooks/use-voice-refs';
 import { PinButton } from './pin-button';
 import { StreamSettingsPopover } from './stream-settings-popover';
@@ -103,6 +105,16 @@ const ExternalStreamCard = memo(
   }: TExternalStreamCardProps) => {
     const { externalVideoRef, hasExternalVideoStream, hasExternalAudioStream } =
       useVoiceRefs(streamId, stream.pluginId, stream.key);
+    const { getConsumerCodec } = useVoice();
+    const videoStats = useVideoStats(externalVideoRef, hasExternalVideoStream);
+    const codec = useMemo(() => {
+      const mimeType = getConsumerCodec(streamId, StreamKind.EXTERNAL_VIDEO);
+      if (!mimeType) return null;
+
+      const parts = mimeType.split('/');
+
+      return parts.length > 1 ? parts[1] : mimeType;
+    }, [getConsumerCodec, streamId]);
 
     const [isFullScreenEnabled, setIsFullscreen] = useState(false);
 
@@ -269,6 +281,19 @@ const ExternalStreamCard = memo(
             <span className="text-white font-medium text-xs truncate">
               {stream.title || 'External Stream'}
             </span>
+
+            {(videoStats || codec) && (
+              <span className="text-white/50 text-xs shrink-0">
+                {codec}
+                {codec && videoStats && ' '}
+                {videoStats && (
+                  <>
+                    {videoStats.width}x{videoStats.height}
+                    {videoStats.frameRate > 0 && ` ${videoStats.frameRate}fps`}
+                  </>
+                )}
+              </span>
+            )}
 
             <div className="flex items-center gap-1 ml-auto">
               {hasVideo && <Video className="size-3 text-blue-400" />}
