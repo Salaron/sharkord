@@ -1,4 +1,6 @@
-const DTLN_WORKLET_URL = '/dtln/dtln-processor.js';
+import { isDesktopApp } from '@/lib/desktop';
+
+const DTLN_WORKLET_URL = './dtln/dtln-processor.js';
 const DTLN_WORKLET_NAME = 'DtlnProcessor';
 
 const DTLN_READY_TIMEOUT_MS = 10000;
@@ -10,7 +12,6 @@ const isDtlnWorkletSupported = () => {
 };
 
 const DTLN_CACHE_NAME = 'dtln-worklet-v3';
-const DTLN_CACHE_ENABLED = true;
 
 // resolves to a blob url for the worklet script -- within a session the same
 // promise is reused (no re-fetch, no re-parse); across page loads the response
@@ -20,8 +21,9 @@ let dtlnBlobUrlPromise: Promise<string> | null = null;
 const getDtlnBlobUrl = (): Promise<string> => {
   if (!dtlnBlobUrlPromise) {
     dtlnBlobUrlPromise = (
-      DTLN_CACHE_ENABLED
-        ? caches.open(DTLN_CACHE_NAME).then(async (cache) => {
+      isDesktopApp()
+        ? fetch(DTLN_WORKLET_URL).then((r) => r.blob())
+        : caches.open(DTLN_CACHE_NAME).then(async (cache) => {
             let response = await cache.match(DTLN_WORKLET_URL);
 
             if (!response) {
@@ -35,7 +37,6 @@ const getDtlnBlobUrl = (): Promise<string> => {
 
             return response.blob();
           })
-        : fetch(DTLN_WORKLET_URL).then((r) => r.blob())
     ).then((blob) => URL.createObjectURL(blob));
   }
 
