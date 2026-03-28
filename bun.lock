@@ -41,7 +41,7 @@
         "i18next-resources-to-backend": "^1.2.1",
         "lodash-es": "^4.17.21",
         "lucide-react": "^0.544.0",
-        "mediasoup-client": "^3.18.0",
+        "mediasoup-client": "^3.18.7",
         "prosemirror-view": "^1.41.6",
         "re-reselect": "^5.1.0",
         "react": "^19.1.1",
@@ -114,7 +114,7 @@
         "ipaddr.js": "^2.3.0",
         "jsonwebtoken": "^9.0.2",
         "link-preview-js": "^3.1.0",
-        "mediasoup": "^3.19.17",
+        "mediasoup": "^3.19.19",
         "queue": "^7.0.0",
         "sanitize-html": "^2.17.0",
         "semver": "^7.7.3",
@@ -176,7 +176,7 @@
         "@typescript-eslint/eslint-plugin": "^8.46.1",
         "eslint": "^8.56.0",
         "eslint-plugin-unused-imports": "^4.1.4",
-        "mediasoup": "^3.19.11",
+        "mediasoup": "^3.19.19",
         "prettier": "^3.5.3",
         "prettier-plugin-organize-imports": "^4.1.0",
         "typescript": "^5",
@@ -209,7 +209,7 @@
         "drizzle-orm": "^0.44.6",
         "js-sha256": "^0.11.1",
         "linkify-it": "^5.0.0",
-        "mediasoup": "^3.19.9",
+        "mediasoup": "^3.19.19",
         "zod": "^4.3.5",
       },
       "devDependencies": {
@@ -231,7 +231,7 @@
       "name": "sharkord-lava-plugin",
       "version": "0.1.1",
       "dependencies": {
-        "mediasoup": "^3.19.17",
+        "mediasoup": "^3.19.19",
       },
       "devDependencies": {
         "@sharkord/plugin-sdk": "link:@sharkord/plugin-sdk",
@@ -810,9 +810,9 @@
 
     "@tiptap/suggestion": ["@tiptap/suggestion@3.21.0", "", { "peerDependencies": { "@tiptap/core": "^3.21.0", "@tiptap/pm": "^3.21.0" } }, "sha512-ShgbaH2hbCRLV+AaVuSx7a/nzPOSdUeW0TNeuxZfWim62MBcx33qtllja1zOoY2tgGXokEihuzFODx83IyvGfQ=="],
 
-    "@trpc/client": ["@trpc/client@11.15.1", "", { "peerDependencies": { "@trpc/server": "11.15.1", "typescript": ">=5.7.2" }, "bin": { "intent": "bin/intent.js" } }, "sha512-Zav9uPSEM7zBlEbttKep1kCfxHumB7P/e/zVFspzfyeB6XYGVeILFeZVL6cnODkgUIFSzgO9X4fXRnn0BP/BhQ=="],
+    "@trpc/client": ["@trpc/client@11.16.0", "", { "peerDependencies": { "@trpc/server": "11.16.0", "typescript": ">=5.7.2" }, "bin": { "intent": "bin/intent.js" } }, "sha512-TxIzm7OoK3baKZ0XCbuMUbI3GhgjcbKHIc4nWVKaRpCRnbSh0T31BT6fTPYwtnA/Nur8pBCGqC2B4J5hEPiPFQ=="],
 
-    "@trpc/server": ["@trpc/server@11.15.1", "", { "peerDependencies": { "typescript": ">=5.7.2" }, "bin": { "intent": "bin/intent.js" } }, "sha512-0A1fIBU0zDLXaSOhuHOChqM4mCCCi233FcPdPNXJ+FIVMd5VEGe33u6cehUavZMquIi6uIec9xymac2P4LgqMA=="],
+    "@trpc/server": ["@trpc/server@11.16.0", "", { "peerDependencies": { "typescript": ">=5.7.2" }, "bin": { "intent": "bin/intent.js" } }, "sha512-XgGuUMddrUTd04+za/WE5GFuZ1/YU9XQG0t3VL5WOIu2JspkOlq6k4RYEiqS6HSJt+S0RXaPdIoE2anIP/BBRQ=="],
 
     "@tybys/wasm-util": ["@tybys/wasm-util@0.10.1", "", { "dependencies": { "tslib": "^2.4.0" } }, "sha512-9tTaPJLSiejZKx+Bmog4uSubteqTvFrVrURwkmHixBo0G4seD0zUxp98E1DzUBJxLQ3NPwXrGKDiVjwx/DpPsg=="],
 
