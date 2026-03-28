@@ -15,14 +15,14 @@
     "magic": "bun --bun run lint:fix && bun --bun run format && bun --bun run check-types"
   },
   "devDependencies": {
-    "@playwright/test": "^1.58.2",
+    "@playwright/test": "^1.59.1",
     "@sharkord/shared": "workspace:*",
     "@types/bun": "latest",
     "@types/react": "^19"
   },
   "peerDependencies": {
-    "typescript": "^5",
-    "@typescript-eslint/eslint-plugin": "^8.46.1",
+    "typescript": "^6.0.2",
+    "@typescript-eslint/eslint-plugin": "^8.58.0",
     "eslint": "^8.56.0",
     "eslint-plugin-unused-imports": "^4.1.4",
     "prettier": "^3.5.3",

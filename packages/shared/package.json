@@ -20,9 +20,9 @@
   },
   "peerDependencies": {
     "@types/react": "^19",
-    "typescript": "^5",
+    "typescript": "^6.0.2",
     "@types/linkify-it": "^5.0.0",
-    "@typescript-eslint/eslint-plugin": "^8.46.1",
+    "@typescript-eslint/eslint-plugin": "^8.58.0",
     "eslint": "^8.56.0",
     "eslint-plugin-unused-imports": "^4.1.4",
     "prettier": "^3.5.3",
@@ -30,10 +30,10 @@
     "@trpc/client": "^11.6.0"
   },
   "dependencies": {
-    "drizzle-orm": "^0.44.6",
+    "drizzle-orm": "^0.45.2",
     "js-sha256": "^0.11.1",
     "linkify-it": "^5.0.0",
-    "mediasoup": "^3.19.9",
+    "mediasoup": "^3.19.19",
     "zod": "^4.3.5"
   }
 }

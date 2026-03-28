@@ -21,6 +21,6 @@
     "magic": "bun run format && bun run check-types && bun run lint"
   },
   "devDependencies": {
-    "knip": "^5.80.0"
+    "knip": "^6.3.0"
   }
 }
