@@ -4,7 +4,10 @@ export enum IpcChannels {
   REGISTER_SHORTCUTS = 'sharkord:register_shortcuts',
   TOGGLE_MIC = 'sharkord:toggle_mic',
   TOGGLE_SOUND = 'sharkord:toggle_sound',
-  OPEN_DEBUG = 'sharkord:open_debug'
+  OPEN_DEBUG = 'sharkord:open_debug',
+  CHECK_UPDATES = 'sharkord:check_updateS',
+  UPDATE_DOWNLOADED = 'sharkord:update_downloaded',
+  INSTALL_UPDATE = 'sharkord:install_update'
 }
 
 export type TScreenShareSourceKind = 'screen' | 'window';
@@ -23,7 +26,7 @@ export type TScreenShareSelection = {
 };
 
 export type TSharkordDesktop = {
-  showScreenSharePicker: (
+  onShowScreenSharePicker: (
     cb: (soucres: TScreenShareSource[]) => Promise<void>
   ) => void;
   handleScreenShareSelection: (selection: TScreenShareSelection | null) => void;
@@ -31,6 +34,9 @@ export type TSharkordDesktop = {
   toggleSound: (cb: () => void) => () => void;
   registerShortcuts: (shortcuts: TShortcut[]) => void;
   openDebug: () => void;
+  onUpdateDownloaded: (callback: (version: string) => void) => void;
+  installUpdate: () => void;
+  checkUpdates: () => void;
 };
 
 export type TShortcut = {
