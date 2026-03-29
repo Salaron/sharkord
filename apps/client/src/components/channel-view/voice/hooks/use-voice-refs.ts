@@ -3,8 +3,13 @@ import { useVolumeControl } from '@/components/voice-provider/volume-control-con
 import { useIsOwnUser } from '@/features/server/users/hooks';
 import { useVoice } from '@/features/server/voice/hooks';
 import { applyAudioOutputDevice } from '@/helpers/audio-output';
+import {
+  createGainNode,
+  removeGainNode,
+  type TContextWithGain
+} from '@/helpers/audio-worklet/audio-gain-worklet';
 import { StreamKind } from '@sharkord/shared';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useAudioLevel } from './use-audio-level';
 
 const useVoiceRefs = (
@@ -99,6 +104,10 @@ const useVoiceRefs = (
 
   const externalVolume = externalVolumeKey ? getVolume(externalVolumeKey) : 100;
 
+  const userAudioGain = useRef<TContextWithGain>(undefined);
+  const userScreenAudioGain = useRef<TContextWithGain>(undefined);
+  const externalAudioGain = useRef<TContextWithGain>(undefined);
+
   useEffect(() => {
     if (!videoStream || !videoRef.current) return;
 
@@ -109,11 +118,18 @@ const useVoiceRefs = (
     if (!audioStream || !audioRef.current) return;
 
     if (audioRef.current.srcObject !== audioStream) {
+      if (userAudioGain.current) {
+        removeGainNode(userAudioGain.current.id);
+      }
       audioRef.current.srcObject = audioStream;
+      userAudioGain.current = createGainNode(audioStream);
     }
 
-    audioRef.current.volume = userVolume / 100;
-    audioRef.current.muted = ownVoiceState.soundMuted;
+    if (userAudioGain.current) {
+      userAudioGain.current.gainNode.gain.value = ownVoiceState.soundMuted
+        ? 0
+        : userVolume / 100;
+    }
 
     applyAudioOutputDevice(audioRef.current, devices.playbackId);
   }, [
@@ -128,11 +144,18 @@ const useVoiceRefs = (
     if (!screenShareAudioStream || !screenShareAudioRef.current) return;
 
     if (screenShareAudioRef.current.srcObject !== screenShareAudioStream) {
+      if (userScreenAudioGain.current) {
+        removeGainNode(userScreenAudioGain.current.id);
+      }
       screenShareAudioRef.current.srcObject = screenShareAudioStream;
+      userScreenAudioGain.current = createGainNode(screenShareAudioStream);
     }
 
-    screenShareAudioRef.current.volume = userScreenVolume / 100;
-    screenShareAudioRef.current.muted = ownVoiceState.soundMuted;
+    if (userScreenAudioGain.current) {
+      userScreenAudioGain.current.gainNode.gain.value = ownVoiceState.soundMuted
+        ? 0
+        : userScreenVolume / 100;
+    }
 
     applyAudioOutputDevice(screenShareAudioRef.current, devices.playbackId);
   }, [
@@ -155,11 +178,18 @@ const useVoiceRefs = (
     if (!externalAudioStream || !externalAudioRef.current) return;
 
     if (externalAudioRef.current.srcObject !== externalAudioStream) {
+      if (externalAudioGain.current) {
+        removeGainNode(externalAudioGain.current.id);
+      }
       externalAudioRef.current.srcObject = externalAudioStream;
+      externalAudioGain.current = createGainNode(externalAudioStream);
     }
 
-    externalAudioRef.current.volume = externalVolume / 100;
-    externalAudioRef.current.muted = ownVoiceState.soundMuted;
+    if (externalAudioGain.current) {
+      externalAudioGain.current.gainNode.gain.value = ownVoiceState.soundMuted
+        ? 0
+        : externalVolume / 100;
+    }
 
     applyAudioOutputDevice(externalAudioRef.current, devices.playbackId);
   }, [

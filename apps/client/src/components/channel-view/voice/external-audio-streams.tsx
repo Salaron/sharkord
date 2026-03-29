@@ -22,7 +22,6 @@ const ExternalAudioStream = memo(
           <audio
             ref={externalAudioRef}
             className="hidden"
-            autoPlay
             data-stream-id={streamId}
           />
         )}

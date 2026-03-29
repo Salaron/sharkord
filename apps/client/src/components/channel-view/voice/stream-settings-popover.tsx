@@ -55,11 +55,11 @@ const StreamSettingsPopover = memo(
                 value={[volume]}
                 onValueChange={([value]) => onVolumeChange(value)}
                 min={0}
-                max={100}
+                max={200}
                 step={1}
                 className="flex-1 cursor-pointer"
               />
-              <span className="text-xs text-muted-foreground w-8 text-right">
+              <span className="text-xs text-muted-foreground w-9 text-right">
                 {Math.round(volume)}%
               </span>
             </div>
