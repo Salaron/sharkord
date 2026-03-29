@@ -2,6 +2,7 @@ import { TextChannel } from '@/components/channel-view/text';
 import { ResizableSidebar } from '@/components/resizable-sidebar';
 import { closeVoiceChatSidebar } from '@/features/app/actions';
 import { useVoiceChatSidebar } from '@/features/app/hooks';
+import { useChannelsMap } from '@/features/server/channels/hooks';
 import { LocalStorageKey } from '@/helpers/storage';
 import { memo } from 'react';
 
@@ -11,8 +12,9 @@ const DEFAULT_WIDTH = 384;
 
 const VoiceChatSidebar = memo(() => {
   const { isOpen, channelId } = useVoiceChatSidebar();
+  const channelsMap = useChannelsMap();
 
-  if (!channelId) {
+  if (!channelId || !channelsMap[channelId]) {
     return null;
   }
 
