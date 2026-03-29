@@ -15,7 +15,6 @@ const VoiceUserAudioStream = memo(({ userId }: TVoiceUserAudioStreamProps) => {
         <audio
           ref={audioRef}
           className="hidden"
-          autoPlay
           data-user-id={userId}
         />
       )}

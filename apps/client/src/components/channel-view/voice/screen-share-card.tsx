@@ -216,7 +216,6 @@ const ScreenShareCard = memo(
         <audio
           ref={screenShareAudioRef}
           className="hidden"
-          autoPlay
           playsInline
         />
 

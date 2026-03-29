@@ -84,13 +84,13 @@ const AudioStreamControl = memo(
               value={[volume]}
               onValueChange={(values) => setVolume(volumeKey, values[0] || 0)}
               min={0}
-              max={100}
+              max={200}
               step={1}
               className="cursor-pointer"
             />
           </div>
 
-          <span className="text-xs text-muted-foreground w-8 text-right">
+          <span className="text-xs text-muted-foreground w-9 text-right">
             {volume}%
           </span>
         </div>

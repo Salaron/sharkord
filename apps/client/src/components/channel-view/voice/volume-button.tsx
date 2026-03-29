@@ -60,11 +60,11 @@ const VolumeButton = memo(({ volumeKey }: TVolumeButtonProps) => {
             value={[volume]}
             onValueChange={handleVolumeChange}
             min={0}
-            max={100}
+            max={200}
             step={1}
             className="flex-1 cursor-pointer"
           />
-          <span className="text-xs text-muted-foreground w-8 text-right">
+          <span className="text-xs text-muted-foreground w-9 text-right">
             {volume}%
           </span>
         </div>
