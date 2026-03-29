@@ -99,7 +99,7 @@ const StreamContextMenu = (props: TStreamContextMenuProps) => {
             value={[volume]}
             onValueChange={([val]) => setVolume(val ?? 0)}
             min={0}
-            max={100}
+            max={200}
             step={1}
           />
           <div className="mt-2 flex items-center justify-between">
