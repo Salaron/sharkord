@@ -82,3 +82,5 @@ export const isCtrlHeldSelector = (state: IRootState) =>
 
 export const isAltHeldSelector = (state: IRootState) =>
   state.app.modifierKeysHeldMap?.Alt ?? false;
+
+export const serverUrlSelector = (state: IRootState) => state.app.serverUrl;
