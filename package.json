@@ -9,7 +9,8 @@
     "!packages/sharkord-whip-plugin"
   ],
   "trustedDependencies": [
-    "mediasoup"
+    "mediasoup",
+    "electron"
   ],
   "scripts": {
     "test": "bun run --filter '*' test",

@@ -12,6 +12,7 @@ const rootCwd = path.resolve(serverCwd, '..', '..');
 
 const rootPckJson = path.join(rootCwd, 'package.json');
 const serverPckJson = path.join(rootCwd, 'apps', 'server', 'package.json');
+const desktopPckJson = path.join(rootCwd, 'apps', 'desktop', 'package.json');
 const clientPckJson = path.join(rootCwd, 'apps', 'client', 'package.json');
 
 const sharedPckJson = path.join(rootCwd, 'packages', 'shared', 'package.json');
@@ -112,6 +113,7 @@ const patchPackageJsons = async (newVersion: string) => {
   const packageJsonPaths = [
     rootPckJson,
     serverPckJson,
+    desktopPckJson,
     clientPckJson,
     sharedPckJson,
     e2ePckJson,
