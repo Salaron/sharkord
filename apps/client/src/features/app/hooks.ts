@@ -18,6 +18,7 @@ import {
   modViewUserIdSelector,
   pluginSlotDebugSelector,
   selectedDmChannelIdSelector,
+  serverUrlSelector,
   threadSidebarDataSelector,
   voiceChatSidebarDataSelector
 } from './selectors';
@@ -70,3 +71,5 @@ export const useIsShiftHeld = () => useSelector(isShiftHeldSelector);
 export const useIsCtrlHeld = () => useSelector(isCtrlHeldSelector);
 
 export const useIsAltHeld = () => useSelector(isAltHeldSelector);
+
+export const useServerUrl = () => useSelector(serverUrlSelector);
