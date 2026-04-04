@@ -12,6 +12,7 @@ import { PluginCommandsDialog } from './plugin-commands';
 import { PluginInstallConfirmDialog } from './plugin-install-confirm';
 import { PluginLogsDialog } from './plugin-logs';
 import { PluginSettingsDialog } from './plugin-settings';
+import { ScreenSharePickerDialog } from './screen-share';
 import { SearchDialog } from './search';
 import { ServerPasswordDialog } from './server-password';
 import { TextInputDialog } from './text-input';
@@ -32,7 +33,8 @@ const DialogsMap: any = {
   [Dialog.PLUGIN_INSTALL_CONFIRM]: PluginInstallConfirmDialog,
   [Dialog.DELETE_USER]: DeleteUserDialog,
   [Dialog.SEARCH]: SearchDialog,
-  [Dialog.WELCOME_PROFILE_SETUP]: WelcomeProfileSetupDialog
+  [Dialog.WELCOME_PROFILE_SETUP]: WelcomeProfileSetupDialog,
+  [Dialog.SCREEN_SHARE_PICKER]: ScreenSharePickerDialog
 };
 
 const DialogsProvider = memo(() => {

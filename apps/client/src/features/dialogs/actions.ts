@@ -1,4 +1,5 @@
 import { Dialog } from '@/components/dialogs/dialogs';
+import type { TScreenShareSelection, TScreenShareSource } from "@sharkord/shared";
 import type { TGenericObject } from '@sharkord/shared';
 import { store } from '../store';
 import { dialogSliceActions } from './slice';
@@ -93,6 +94,30 @@ export const requestTextInput = async ({
         resolve(text);
       },
       onCancel: () => {
+        resolve(null);
+      }
+    });
+  });
+};
+
+export const requestScreenShareSelection = async ({
+  sources,
+  includeSystemAudio
+}: {
+  sources: TScreenShareSource[];
+  includeSystemAudio: boolean;
+}): Promise<TScreenShareSelection | null> => {
+  return new Promise((resolve) => {
+    sources.sort((source) => (source.kind === 'screen' ? -1 : 1));
+    openDialog(Dialog.SCREEN_SHARE_PICKER, {
+      sources,
+      includeSystemAudio,
+      onConfirm: (selection: TScreenShareSelection) => {
+        closeDialogs();
+        resolve(selection);
+      },
+      onCancel: () => {
+        closeDialogs();
         resolve(null);
       }
     });

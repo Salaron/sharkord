@@ -1,4 +1,5 @@
 import { setPluginsLoading } from '@/features/app/actions';
+import { useServerUrl } from '@/features/app/hooks';
 import {
   processPluginComponents,
   setPluginComponents
@@ -11,6 +12,8 @@ export type TPluginsController = {
 };
 
 const PluginsController = memo(() => {
+  const serverUrl = useServerUrl();
+
   const fetchPlugins = useCallback(async () => {
     try {
       const response = await fetch(`${getUrlFromServer()}/plugin-components`);
@@ -31,11 +34,14 @@ const PluginsController = memo(() => {
   }, []);
 
   useEffect(() => {
+    if (!serverUrl)
+      return;
+
     // we need to fetch plugins here before joining the server
     // because there might be slots that need to be rendered in the login screen
     // once you are connected the the data flow is through trpc and not through this controller
     fetchPlugins();
-  }, [fetchPlugins]);
+  }, [fetchPlugins, serverUrl]);
 
   return null;
 });
