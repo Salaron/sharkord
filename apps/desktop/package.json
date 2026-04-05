@@ -10,7 +10,7 @@
     "build": "bun run build:client && bun run build:electron",
     "build:client": "cd ../client && bun run build",
     "build:electron": "bun scripts/build.mts",
-    "publish": "bun run build && electron-builder",
+    "publish": "bun run build && electron-builder -p onTag",
     "format": "prettier --write \"**/*.ts*\" --config ./.prettierrc.json",
     "format:check": "prettier --check \"**/*.ts*\" --config ./.prettierrc.json"
   },
@@ -35,7 +35,7 @@
   "build": {
     "appId": "com.sharkord.desktop",
     "productName": "SharkordDesktop",
-    "executableName": "sharkord",
+    "executableName": "SharkordDesktop",
     "directories": {
       "output": "build/out",
       "buildResources": "assets"
@@ -44,15 +44,38 @@
       "assets/*",
       "dist/**/*"
     ],
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "Salaron",
+        "repo": "sharkord"
+      }
+    ],
     "linux": {
       "target": [
         "AppImage"
-      ]
+      ],
+      "icon": "assets/icons/icon.png"
     },
     "win": {
       "target": [
-        "zip"
-      ]
+        "nsis",
+        "portable"
+      ],
+      "icon": "assets/icons/icon.ico"
+    },
+    "appImage": {
+      "artifactName": "SharkordDesktop.AppImage"
+    },
+    "nsis": {
+      "artifactName": "SharkordDesktop-Setup.exe"
+    },
+    "portable": {
+      "artifactName": "SharkordDesktop-Portable.exe"
     }
+  },
+  "dependencies": {
+    "electron-log": "^5.4.3",
+    "electron-updater": "^6.8.3"
   }
 }

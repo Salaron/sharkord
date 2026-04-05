@@ -1,3 +1,4 @@
+import { isDesktopApp } from '@/lib/desktop';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@sharkord/ui';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -9,7 +10,6 @@ import { Others } from './others';
 import { Password } from './password';
 import { Profile } from './profile';
 import { Shortcuts } from './shortcuts';
-import { isDesktopApp } from '@/lib/desktop';
 
 type TUserSettingsProps = TServerScreenBaseProps;
 
@@ -25,7 +25,9 @@ const UserSettings = memo(({ close }: TUserSettingsProps) => {
           <TabsList className="mb-6">
             <TabsTrigger value="profile">{t('profileTab')}</TabsTrigger>
             <TabsTrigger value="devices">{t('devicesTab')}</TabsTrigger>
-            {isDesktop && <TabsTrigger value="shortcuts">Shortcuts</TabsTrigger>}
+            {isDesktop && (
+              <TabsTrigger value="shortcuts">Shortcuts</TabsTrigger>
+            )}
             <TabsTrigger value="password">{t('passwordTab')}</TabsTrigger>
             <TabsTrigger value="notifications">
               {t('notificationsTab')}
