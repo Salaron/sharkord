@@ -1,4 +1,7 @@
-import { requestScreenShareSelection } from '@/features/dialogs/actions';
+import {
+  requestConfirmation,
+  requestScreenShareSelection
+} from '@/features/dialogs/actions';
 import {
   getLocalStorageItemBool,
   LocalStorageKey,
@@ -18,7 +21,11 @@ const registerShortcuts = (shortcuts: TShortcut[]) => {
   SharkordDesktop?.registerShortcuts(shortcuts);
 }
 
-SharkordDesktop?.showScreenSharePicker(
+const checkUpdates = () => {
+  SharkordDesktop?.checkUpdates();
+};
+
+SharkordDesktop?.onShowScreenSharePicker(
   async (sources: TScreenShareSource[]) => {
     const includeSystemAudio = getLocalStorageItemBool(
       LocalStorageKey.SCREEN_SHARE_SYSTEM_AUDIO
@@ -40,4 +47,16 @@ SharkordDesktop?.showScreenSharePicker(
   }
 );
 
-export { isDesktopApp, registerShortcuts };
+SharkordDesktop?.onUpdateDownloaded(async (version: string) => {
+  await requestConfirmation({
+    title: 'Update available',
+    message: `Version ${version} is available. Do you want to install it now?`,
+    confirmLabel: 'Install now',
+    cancelLabel: 'Install later',
+    onConfirm: () => {
+      SharkordDesktop?.installUpdate();
+    }
+  });
+});
+
+export { checkUpdates, isDesktopApp, registerShortcuts };
