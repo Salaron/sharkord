@@ -1,7 +1,7 @@
 import { Dialog } from '@/components/dialogs/dialogs';
 import { logDebug } from '@/helpers/browser-logger';
 import { getUrlFromServer } from '@/helpers/get-file-url';
-import { isDesktopApp } from '@/lib/desktop';
+import { checkUpdates, isDesktopApp } from '@/lib/desktop';
 import { cleanup, connectToTRPC, getTRPCClient } from '@/lib/trpc';
 import type { TMessageJumpToTarget } from '@/types';
 import { type TPublicServerSettings, type TServerInfo } from '@sharkord/shared';
@@ -92,6 +92,8 @@ export const connect = async () => {
   if (showWelcomeDialog) {
     openDialog(Dialog.WELCOME_PROFILE_SETUP);
   }
+
+  checkUpdates();
 };
 
 export const joinServer = async (handshakeHash: string, password?: string) => {

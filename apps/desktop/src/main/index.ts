@@ -1,4 +1,7 @@
+import logger from 'electron-log';
+import { autoUpdater } from 'electron-updater';
 import { app, globalShortcut } from 'electron/main';
+import { updateDownloadedNotify } from './ipc';
 import { createMainWindow } from './main-window';
 import { setupScreenShareRequestHandler } from './screen-sharing';
 import { initTray } from './tray';
@@ -13,6 +16,12 @@ if (!app.requestSingleInstanceLock()) {
     const mainWindow = createMainWindow();
     initTray(mainWindow);
     setupScreenShareRequestHandler();
+
+    autoUpdater.allowPrerelease = false;
+    autoUpdater.logger = logger;
+    autoUpdater.on('update-downloaded', (ev) =>
+      updateDownloadedNotify(ev.version)
+    );
 
     app.on('second-instance', () => {
       if (mainWindow) {
@@ -30,7 +39,7 @@ if (!app.requestSingleInstanceLock()) {
   });
 
   app.on('will-quit', () => {
-    console.log('Unregistering shortcuts...');
+    logger.log('Unregistering shortcuts...');
     globalShortcut.unregisterAll();
   });
 }
