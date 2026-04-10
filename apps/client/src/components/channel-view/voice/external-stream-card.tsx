@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 import { StreamKind, type TExternalStream } from '@sharkord/shared';
 import { Avatar, AvatarFallback, AvatarImage, IconButton } from '@sharkord/ui';
 import { Headphones, Router, Video, ZoomIn, ZoomOut } from 'lucide-react';
-import { memo, useCallback, type RefObject } from 'react';
+import { memo, useCallback, useMemo, type RefObject } from 'react';
 import { CardControls } from './card-controls';
 import { CardGradient } from './card-gradient';
 import { FullscreenButton } from './fullscreen-button';
@@ -63,6 +63,7 @@ const ExternalStreamControls = memo(
             onMuteToggle={onMuteToggle}
           />
         )}
+        {hasVideo && <PictureInPictureButton videoRef={videoRef} />}
         {showPinControls && hasVideo && isPinned && (
           <IconButton
             variant={isZoomEnabled ? 'default' : 'ghost'}
@@ -72,15 +73,14 @@ const ExternalStreamControls = memo(
             size="sm"
           />
         )}
-        {hasVideo && <PictureInPictureButton videoRef={videoRef} />}
+        {showPinControls && (
+          <PinButton isPinned={isPinned} handlePinToggle={handlePinToggle} />
+        )}
         {hasVideo && (
           <FullscreenButton
             isFullscreen={isFullscreen}
             handleToggleFullscreen={handleToggleFullscreen}
           />
-        )}
-        {showPinControls && (
-          <PinButton isPinned={isPinned} handlePinToggle={handlePinToggle} />
         )}
       </CardControls>
     );

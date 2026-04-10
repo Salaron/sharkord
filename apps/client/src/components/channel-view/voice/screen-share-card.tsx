@@ -59,13 +59,14 @@ const ScreenShareControls = memo(
             size="sm"
           />
         )}
+
+        {showPinControls && (
+          <PinButton isPinned={isPinned} handlePinToggle={handlePinToggle} />
+        )}
         <FullscreenButton
           isFullscreen={isFullscreen}
           handleToggleFullscreen={handleToggleFullscreen}
         />
-        {showPinControls && (
-          <PinButton isPinned={isPinned} handlePinToggle={handlePinToggle} />
-        )}
       </CardControls>
     );
   }
