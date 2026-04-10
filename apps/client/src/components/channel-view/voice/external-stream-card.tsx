@@ -69,14 +69,14 @@ const ExternalStreamControls = memo(
             size="sm"
           />
         )}
+        {showPinControls && (
+          <PinButton isPinned={isPinned} handlePinToggle={handlePinToggle} />
+        )}
         {hasVideo && (
           <FullscreenButton
             isFullscreen={isFullscreen}
             handleToggleFullscreen={handleToggleFullscreen}
           />
-        )}
-        {showPinControls && (
-          <PinButton isPinned={isPinned} handlePinToggle={handlePinToggle} />
         )}
       </CardControls>
     );
