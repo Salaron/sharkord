@@ -43,7 +43,7 @@ const Connect = memo(() => {
   }>({
     identity: getLocalStorageItem(LocalStorageKey.IDENTITY) || '',
     password: getLocalStorageItem(LocalStorageKey.USER_PASSWORD) || '',
-    rememberCredentials: !!getLocalStorageItem(
+    rememberCredentials: getLocalStorageItemBool(
       LocalStorageKey.REMEMBER_CREDENTIALS
     ),
     autoLogin: getLocalStorageItemBool(LocalStorageKey.AUTO_LOGIN)
@@ -87,11 +87,23 @@ const Connect = memo(() => {
 
       setSessionStorageItem(SessionStorageKey.TOKEN, data.token);
       setLocalStorageItemBool(LocalStorageKey.AUTO_LOGIN, values.autoLogin);
+      setLocalStorageItemBool(
+        LocalStorageKey.REMEMBER_CREDENTIALS,
+        values.rememberCredentials
+      );
 
       if (values.autoLogin) {
         setLocalStorageItem(LocalStorageKey.AUTO_LOGIN_TOKEN, data.token);
       } else {
         removeLocalStorageItem(LocalStorageKey.AUTO_LOGIN_TOKEN);
+      }
+
+      if (values.rememberCredentials) {
+        setLocalStorageItem(LocalStorageKey.IDENTITY, values.identity);
+        setLocalStorageItem(LocalStorageKey.USER_PASSWORD, values.password);
+      } else {
+        removeLocalStorageItem(LocalStorageKey.IDENTITY);
+        removeLocalStorageItem(LocalStorageKey.USER_PASSWORD);
       }
 
       await connect();
@@ -107,6 +119,7 @@ const Connect = memo(() => {
     values.identity,
     values.password,
     values.autoLogin,
+    values.rememberCredentials,
     setErrors,
     inviteCode,
     t
@@ -172,6 +185,18 @@ const Connect = memo(() => {
               />
             </Group>
           </form>
+
+          <div
+            className="flex items-center gap-2 w-fit cursor-pointer"
+            onClick={() =>
+              onChange('rememberCredentials', !values.rememberCredentials)
+            }
+          >
+            <Switch checked={values.rememberCredentials} />
+            <Label className="text-sm cursor-pointer">
+              {t('rememberCredentials')}
+            </Label>
+          </div>
 
           <div
             className="flex items-center gap-2 w-fit cursor-pointer"
