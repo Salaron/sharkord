@@ -1,5 +1,7 @@
 import { LanguageSwitcher } from '@/components/language-switcher';
 import { PluginSlotRenderer } from '@/components/plugin-slot-renderer';
+import { setServerUrl } from '@/features/app/actions';
+import { useServerUrl } from '@/features/app/hooks';
 import { connect } from '@/features/server/actions';
 import { useInfo } from '@/features/server/hooks';
 import { getFileUrl, getUrlFromServer } from '@/helpers/get-file-url';
@@ -14,6 +16,7 @@ import {
   setSessionStorageItem
 } from '@/helpers/storage';
 import { useForm } from '@/hooks/use-form';
+import { isDesktopApp } from '@/lib/desktop';
 import { PluginSlot, TestId } from '@sharkord/shared';
 import {
   Alert,
@@ -56,6 +59,12 @@ const Connect = memo(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const invite = urlParams.get('invite');
     return invite || undefined;
+  }, []);
+
+  const serverUrl = useServerUrl();
+
+  const onChangeServerClick = useCallback(() => {
+    setServerUrl(null);
   }, []);
 
   const onConnectClick = useCallback(async () => {
@@ -219,9 +228,15 @@ const Connect = memo(() => {
               </Alert>
             )}
 
+            {isDesktopApp() && (
+              <Button variant="secondary" onClick={onChangeServerClick}>
+                Change server
+              </Button>
+            )}
+
             <Button
               className="w-full"
-              variant="outline"
+              variant="default"
               onClick={onConnectClick}
               disabled={loading || !values.identity || !values.password}
               data-testid={TestId.CONNECT_BUTTON}
@@ -271,6 +286,10 @@ const Connect = memo(() => {
         >
           Sharkord
         </a>
+      </div>
+
+      <div className="text-xs text-muted-foreground select-none">
+        {serverUrl}
       </div>
     </div>
   );
