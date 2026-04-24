@@ -367,9 +367,9 @@ const sfxOwnUserStoppedScreenshare = () => {
 // REMOTE JOIN — layered uplifting tones
 const sfxRemoteUserJoinedVoiceChannel = () => {
   const tones = [
-    { freq: 587, gain: 0.06, delay: 0 }, // D
-    { freq: 740, gain: 0.05, delay: 0.06 }, // F#
-    { freq: 880, gain: 0.04, delay: 0.12 } // A
+    { freq: 587, gain: 0.1, delay: 0 }, // D
+    { freq: 740, gain: 0.9, delay: 0.06 }, // F#
+    { freq: 880, gain: 0.8, delay: 0.12 } // A
   ];
 
   tones.forEach(({ freq, gain: g, delay }) => {
@@ -388,9 +388,9 @@ const sfxRemoteUserJoinedVoiceChannel = () => {
 // REMOTE LEAVE — layered descending tones
 const sfxRemoteUserLeftVoiceChannel = () => {
   const tones = [
-    { freq: 659, gain: 0.06, delay: 0 }, // E
-    { freq: 523, gain: 0.05, delay: 0.06 }, // C
-    { freq: 440, gain: 0.04, delay: 0.12 } // A
+    { freq: 659, gain: 0.1, delay: 0 }, // E
+    { freq: 523, gain: 0.9, delay: 0.06 }, // C
+    { freq: 440, gain: 0.8, delay: 0.12 } // A
   ];
 
   tones.forEach(({ freq, gain: g, delay }) => {
