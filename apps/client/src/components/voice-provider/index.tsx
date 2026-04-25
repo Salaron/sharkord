@@ -339,6 +339,7 @@ const VoiceProvider = memo(({ children }: TVoiceProviderProps) => {
         await navigator.mediaDevices.getUserMedia(micStreamConstraints);
 
       logVoice('Microphone stream obtained', { stream: rawStream });
+      rawMicrophoneStreamRef.current = rawStream;
 
       const rawAudioTrack = rawStream.getAudioTracks()[0];
 
@@ -373,7 +374,6 @@ const VoiceProvider = memo(({ children }: TVoiceProviderProps) => {
             const processedTrack = destination.stream.getAudioTracks()[0];
 
             if (processedTrack) {
-              rawMicrophoneStreamRef.current = rawStream;
               microphoneNoiseGateAudioContextRef.current = audioContext;
               microphoneNoiseGateWorkletNodeRef.current = noiseGateNode;
               transmitTrack = processedTrack;
