@@ -40,12 +40,11 @@ linux:
   executableName: sharkord
   syncDesktopName: true
 win:
-  target:
+  target: 
     - nsis
-    - msi
+    - portable
 publish:
   provider: github
-  owner: Sharkord
-  repo: sharkord-desktop
-  releaseType: draft
+  owner: Salaron
+  repo: sharkord
   updaterCacheDirName: sharkord-app-updater
