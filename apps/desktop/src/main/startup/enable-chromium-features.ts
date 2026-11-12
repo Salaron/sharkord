@@ -5,7 +5,9 @@ const HARDWARE_VIDEO_CODECS = [
   'AcceleratedVideoEncoder',
   'AcceleratedVideoDecodeLinuxGL',
   'AcceleratedVideoDecodeLinuxZeroCopyGL',
-  'VaapiIgnoreDriverChecks'
+  'VaapiIgnoreDriverChecks',
+  'VaapiVideoDecoder',
+  'VaapiVideoEncoder'
 ];
 
 const enableChromiumFeatures = () => {

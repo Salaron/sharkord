@@ -1053,16 +1053,18 @@ const VoiceProvider = memo(({ children }: TVoiceProviderProps) => {
             screenSettings.screenCodec !== VideoCodec.AUTO &&
             routerRtpCapabilities.current?.codecs
           ) {
-            preferredCodec = routerRtpCapabilities.current.codecs.find(
+            const matchingCodecs = routerRtpCapabilities.current.codecs.filter(
               (c) =>
                 c.mimeType.toLowerCase() ===
                 screenSettings.screenCodec.toLowerCase()
             );
 
+            voiceLogger.info('screen: found codecs', matchingCodecs);
+
+            preferredCodec = matchingCodecs[0];
+
             if (preferredCodec) {
-              voiceLogger.info('screen: using preferred codec', {
-                codec: preferredCodec.mimeType
-              });
+              voiceLogger.info('screen: using preferred codec', preferredCodec);
             }
           }
 

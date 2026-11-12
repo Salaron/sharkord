@@ -175,6 +175,7 @@ const startAutoUpdater = ({ onOpenUpdates }: TStartAutoUpdaterOptions) => {
   }
 
   openUpdates = onOpenUpdates;
+  autoUpdater.allowPrerelease = false;
   autoUpdater.logger = logger;
 
   autoUpdater.on('checking-for-update', () => {
