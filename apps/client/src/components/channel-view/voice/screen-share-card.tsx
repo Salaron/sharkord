@@ -229,22 +229,14 @@ const ScreenShareCard = memo(
                 portalContainer={fullscreenElement}
               />
             )}
-            <FullscreenButton
-              isFullscreen={isFullscreen}
-              handleToggleFullscreen={handleToggleFullscreen}
+            <IconButton
+              variant={isZoomEnabled ? 'default' : 'ghost'}
+              icon={isZoomEnabled ? ZoomOut : ZoomIn}
+              onClick={handleToggleZoom}
+              title={isZoomEnabled ? 'Disable Zoom' : 'Enable Zoom'}
               size={density.icon}
-              className={cardControlClass(isFullscreen)}
+              className={cardControlClass(isZoomEnabled)}
             />
-            {showPinControls && isPinned && (
-              <IconButton
-                variant={isZoomEnabled ? 'default' : 'ghost'}
-                icon={isZoomEnabled ? ZoomOut : ZoomIn}
-                onClick={handleToggleZoom}
-                title={isZoomEnabled ? 'Disable Zoom' : 'Enable Zoom'}
-                size={density.icon}
-                className={cardControlClass(isZoomEnabled)}
-              />
-            )}
             {showPinControls && (
               <PinButton
                 isPinned={isPinned}
@@ -253,6 +245,12 @@ const ScreenShareCard = memo(
                 className={cardControlClass(isPinned)}
               />
             )}
+            <FullscreenButton
+              isFullscreen={isFullscreen}
+              handleToggleFullscreen={handleToggleFullscreen}
+              size={density.icon}
+              className={cardControlClass(isFullscreen)}
+            />
           </div>
         </div>
 
