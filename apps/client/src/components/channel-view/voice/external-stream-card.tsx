@@ -113,14 +113,6 @@ const ExternalStreamControls = memo(
             />
           )}
           {hasVideo && (
-            <FullscreenButton
-              isFullscreen={isFullscreen}
-              handleToggleFullscreen={handleToggleFullscreen}
-              size={density.icon}
-              className={cardControlClass(isFullscreen)}
-            />
-          )}
-          {showPinControls && hasVideo && isPinned && (
             <IconButton
               variant={isZoomEnabled ? 'default' : 'ghost'}
               icon={isZoomEnabled ? ZoomOut : ZoomIn}
@@ -136,6 +128,14 @@ const ExternalStreamControls = memo(
               handlePinToggle={handlePinToggle}
               size={density.icon}
               className={cardControlClass(isPinned)}
+            />
+          )}
+          {hasVideo && (
+            <FullscreenButton
+              isFullscreen={isFullscreen}
+              handleToggleFullscreen={handleToggleFullscreen}
+              size={density.icon}
+              className={cardControlClass(isFullscreen)}
             />
           )}
         </div>
