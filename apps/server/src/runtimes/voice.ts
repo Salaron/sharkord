@@ -36,6 +36,14 @@ const defaultRouterOptions: RouterOptions<AppData> = {
   mediaCodecs: [
     {
       kind: 'video',
+      mimeType: 'video/AV1',
+      clockRate: 90000,
+      parameters: {
+        'x-google-start-bitrate': 2000
+      }
+    },
+    {
+      kind: 'video',
       mimeType: 'video/VP9',
       clockRate: 90000,
       parameters: {
@@ -57,7 +65,7 @@ const defaultRouterOptions: RouterOptions<AppData> = {
       clockRate: 90000,
       parameters: {
         'packetization-mode': 1,
-        'profile-level-id': '42e01f',
+        'profile-level-id': '640034',
         'level-asymmetry-allowed': 1,
         'x-google-start-bitrate': 2000
       }
@@ -79,16 +87,30 @@ const defaultRouterOptions: RouterOptions<AppData> = {
       clockRate: 90000,
       parameters: {
         'packetization-mode': 1,
-        'profile-level-id': '4d0032',
+        'profile-level-id': '64001f',
         'level-asymmetry-allowed': 1,
         'x-google-start-bitrate': 2000
       }
     },
     {
       kind: 'video',
-      mimeType: 'video/AV1',
+      mimeType: 'video/H264',
       clockRate: 90000,
       parameters: {
+        'packetization-mode': 1,
+        'profile-level-id': '42e01f',
+        'level-asymmetry-allowed': 1,
+        'x-google-start-bitrate': 2000
+      }
+    },
+    {
+      kind: 'video',
+      mimeType: 'video/H264',
+      clockRate: 90000,
+      parameters: {
+        'packetization-mode': 1,
+        'profile-level-id': '4d0032',
+        'level-asymmetry-allowed': 1,
         'x-google-start-bitrate': 2000
       }
     },
@@ -99,11 +121,7 @@ const defaultRouterOptions: RouterOptions<AppData> = {
       channels: 2,
       parameters: {
         useinbandfec: 1,
-        usedtx: 1,
-        stereo: 1,
-        'sprop-stereo': 1,
-        maxplaybackrate: 48000,
-        maxaveragebitrate: 128000
+        usedtx: 1
       }
     }
   ]
