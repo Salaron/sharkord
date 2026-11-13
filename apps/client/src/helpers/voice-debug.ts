@@ -67,6 +67,12 @@ type TVoiceDebugConsumer = {
   stats: TVoiceDebugStat[];
 };
 
+type TCodecDescription = {
+  mime: string;
+  parameters: Record<string, unknown>;
+  preferredPayloadType: number;
+};
+
 type TVoiceDebugSnapshot = {
   capturedAt: number;
   hasSession: boolean;
@@ -74,8 +80,8 @@ type TVoiceDebugSnapshot = {
   transports: TVoiceDebugTransport[];
   producers: TVoiceDebugProducer[];
   consumers: TVoiceDebugConsumer[];
-  routerCodecs: string[];
-  deviceCodecs: string[];
+  routerCodecs: TCodecDescription[];
+  deviceCodecs: TCodecDescription[];
   collectErrors: string[];
 };
 
@@ -254,8 +260,16 @@ const describeConsumer = async (
       )
 });
 
-const getCodecNames = (capabilities: RtpCapabilities | null | undefined) =>
-  capabilities?.codecs?.map((codec) => codec.mimeType) ?? [];
+const getCodecDescriptions = (
+  capabilities: RtpCapabilities | null | undefined
+): TCodecDescription[] =>
+  capabilities?.codecs
+    ?.filter((codec) => !codec.mimeType.includes('rtx'))
+    .map((codec) => ({
+      mime: codec.mimeType,
+      parameters: codec.parameters ?? {},
+      preferredPayloadType: codec.preferredPayloadType
+    })) ?? [];
 
 const collectVoiceDebugSnapshot = async (): Promise<TVoiceDebugSnapshot> => {
   const collectErrors: string[] = [];
@@ -307,8 +321,8 @@ const collectVoiceDebugSnapshot = async (): Promise<TVoiceDebugSnapshot> => {
     transports,
     producers,
     consumers,
-    routerCodecs: getCodecNames(current?.routerRtpCapabilities),
-    deviceCodecs: getCodecNames(current?.deviceRtpCapabilities),
+    routerCodecs: getCodecDescriptions(current?.routerRtpCapabilities),
+    deviceCodecs: getCodecDescriptions(current?.deviceRtpCapabilities),
     collectErrors
   };
 };

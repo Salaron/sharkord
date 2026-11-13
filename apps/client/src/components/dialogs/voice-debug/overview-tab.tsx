@@ -304,6 +304,30 @@ const OverviewTab = memo(
         ))}
       </Section>
 
+      <Section title="codecs · router">
+        {snapshot.routerCodecs.map((codec) => (
+          <p className="break-all font-mono text-[11px] text-muted-foreground">
+            {codec.mime},payloadType={codec.preferredPayloadType}
+            {Object.keys(codec.parameters).reduce(
+              (res, key) => `${res},${key}=${codec.parameters[key]}`,
+              ''
+            )}
+          </p>
+        ))}
+      </Section>
+
+      <Section title="codecs · device">
+        {snapshot.deviceCodecs.map((codec) => (
+          <p className="break-all font-mono text-[11px] text-muted-foreground">
+            {codec.mime},payloadType={codec.preferredPayloadType}
+            {Object.keys(codec.parameters).reduce(
+              (res, key) => `${res},${key}=${codec.parameters[key]}`,
+              ''
+            )}
+          </p>
+        ))}
+      </Section>
+
       {snapshot.collectErrors.map((error) => (
         <p
           key={error}
