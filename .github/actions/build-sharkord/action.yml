@@ -6,16 +6,21 @@ inputs:
     description: Bun version to install
     required: false
     default: 1.4.4
-  bump:
-    description: Version bump mode (none, patch, minor, major)
+
+  version:
+    description: Sharkord version to set before build
     required: false
-    default: none
+
+outputs:
+  version:
+    description: 'Current Sharkord version'
+    value: ${{ steps.version.outputs.version }}
 
 runs:
   using: composite
   steps:
     - name: Install Bun
-      uses: oven-sh/setup-bun@v1
+      uses: oven-sh/setup-bun@v2
       with:
         bun-version: ${{ inputs.bun_version }}
 
@@ -28,8 +33,21 @@ runs:
       env:
         ELECTRON_SKIP_BINARY_DOWNLOAD: 1
 
+    - name: Set version
+      if: ${{ inputs.version != '' }}
+      shell: bash
+      working-directory: apps/server
+      run: bun run ./build/set-version.ts --version "${{ inputs.version }}"
+    
+    - name: Get version
+      id: version
+      shell: bash
+      working-directory: apps/server
+      run: |
+        VERSION=$(jq -r .version package.json)
+        echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+
     - name: Build app
       shell: bash
-      run: |
-        cd apps/server
-        bun run build --bump "${{ inputs.bump }}"
+      working-directory: apps/server
+      run: bun run build
