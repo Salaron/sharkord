@@ -5,7 +5,10 @@ const HARDWARE_VIDEO_CODECS = [
   'AcceleratedVideoEncoder',
   'AcceleratedVideoDecodeLinuxGL',
   'AcceleratedVideoDecodeLinuxZeroCopyGL',
-  'VaapiIgnoreDriverChecks'
+  'VaapiIgnoreDriverChecks',
+  'VaapiVideoDecoder',
+  'VaapiVideoEncoder',
+  'UseMultiPlaneFormatForHardwareVideo'
 ];
 
 const enableChromiumFeatures = () => {
@@ -14,6 +17,13 @@ const enableChromiumFeatures = () => {
   const features = new Set([...userFeatures, ...HARDWARE_VIDEO_CODECS]);
 
   features.delete('');
+
+  app.commandLine.appendSwitch('ignore-gpu-blacklist');
+  app.commandLine.appendSwitch('enable-gpu-rasterization');
+  app.commandLine.appendSwitch('enable-zero-copy');
+  app.commandLine.appendSwitch('webrtc-max-cpu-consumption-percentage', '100');
+  app.commandLine.appendSwitch('enable-accelerated-video-decode');
+  app.commandLine.appendSwitch('enable-accelerated-video-encode');
 
   app.commandLine.appendSwitch('enable-features', [...features].join(','));
 };
